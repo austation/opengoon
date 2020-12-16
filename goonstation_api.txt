@@ -1,0 +1,178 @@
+API Endpoint is in config
+
+api call might look like http://api.austation.net/bans/check/?ckey=mcterra&date=blah&forceResponse=1&data_server=blah&auth=283vn4ht9458gv934nt9
+
+outgoing params are based on "sort-of-GET"(tm), with there being a / between the path and the ?, which kinddda breaks things
+
+API returns responses in JSON
+
+api proc just returns 1 unless force is specified? from what I can tell, forceResponse is used when data is to be recieved. It's unset when data is pushed to the API.
+
+okay, so if force is NOT specified, the API processes and then does a callback to the server Topic() later on to handle things.
+
+response can also specify an error field to contain API errors. why this is handled in every proc that makes an API call I dunno, but it just is.
+
+notable files:
+all of api_handler.dm
+world.dm lines from 1362
+
+API Usage and Exhaustive Endpoints:
+antags: used for antag stats for players
+	history:
+		request:
+			role = antagonist type, simple string
+			mode = round mode
+			players[0], players[1], ... = ckeys for arbitrary amount of players to fetch history for - if only one player given, [] syntax is ommitted
+		returns:
+			history = list of history for each player with following structure (in json as an example):
+				"history": {
+					"example_key (this would be a player's ckey)": {
+						"selected": 10, - number of times selected for a role in given mode
+						"seen": 20 - number of times seen in a given mode
+					}
+				}
+		callback: no
+		behaviour: returns information about antag history for a list of players, given role and round types.
+
+	completeHistory:
+		request:
+			ckey = player ckey
+		returns:
+			history = list of player antag history (in json as an example):
+				"history": {
+					"changeling": {
+						"selected": 10 - number of times selected for a role in given mode
+						"seen": 20 - number of times seen in a given mode
+						"percent": 50 - percentage of rounds chosen. why this isn't just calculated in the code I don't know.
+					}
+					// more modes/roles go here
+				}
+		callback: no
+		behaviour: returns a full list of every role a player played in and the number and percentage of the times they were selected.
+
+	records:
+		request:
+			role: role selected for, one of two valid options
+			latejoin: 1 or 0 (boolean) if antag was latejoin. only used if role is given
+			players[0][ckey] AND players[0][role], players[1][ckey] AND players[1][role], ... = ckeys for arbitrary amount of players to fetch history for, as well as roles - if only one player given, [] syntax is ommitted and only "players" is given
+			assday: 1 if ass day on. not present otherwise. only given when multiple player ckeys are provided, not singular. don't count for weighting.
+		returns: nothing
+		callback: no
+		behaviour: stores either a single player or multiple players to the database for antag rounds.
+
+versions: byond version tracking for players, including user agent
+	add:
+		request:
+			ckey = player ckey
+			ua = player user agent
+			byondMajor = byond version
+			byondMinor = byond build
+		returns: nothing
+		callback: no
+		behaviour: stores given information into database for manual lookup I guess? It's never used again so whatever. Could probably get away with not implementing it
+
+gauntlet: some persistant data for a game area or adventure zone idk, needs investigation
+	getPrevious: probably get the data for previous session
+
+participation: just record rounds a player was in, only consists of the name
+	record:
+		request:
+			ckey = player key
+			round_mode = current round type
+		returns: nothing
+		callback: no
+		behaviour: records a player's participation in a round
+
+	recordMultiple:
+		request:
+			ckeys[0], ckeys[1], ... = player ckeys
+			round_mode = current round type
+		returns: nothing
+		callback: no
+		behaviour: records round participation for multiple players at a time.
+
+map-switcher: *apparently*, goon requires the chosen map to literally be chosen at compile time, so this is done by API. Guess I can edit the dme on the fly for this one...
+	switch:
+		request:
+			cause: reason for map switch
+			map: ID for the map we're switching to
+			votedFor: 1 or 0, boolean for if the map switch was player triggered or not
+		returns: nothing, bar defaults. I will note however that the expected response code is 201.
+		callback: technically, yes, but not from the API itself. CI should call topic "mapSwitchDone". Not a focus rn, the API should just ignore this for now.
+		behaviour: oh my god this is the worst, it literally tells CI to recompile the damn project with a different map, because there's no ondemand maploading, period
+
+bans: handle all that sweet ban type stuff
+	check: send data to server and get their ban data
+	add: add a new ban
+	edit: edit an existing ban
+	delete: delete a ban
+	updateLocal: pull down bans to update local storage
+	updateRemote: push all the bans up to remote I guess
+	parity: check if the remote and local dbs are synced
+
+playerInfo: handles player statistics
+	get:
+		request:
+			ckey: player ckey
+		returns:
+			seen: total rounds connected
+			participated: total rounds participated in
+			byondMajor: byond version
+			byondMinor: byond build
+			platform: operating system I guess? extracted from user agent
+			browser: browser in use, might be extracted from user agent
+			browserVersion: browser version, as above
+			browserMode: can be ommitted, probably as above
+			last_ip: last used IP address
+			last_compID: last used computer ID
+		callback: no
+		behaviour: takes a ckey and spits back a heap of information pulled from the DB
+
+	getIPs:
+		request:
+			ckey: player ckey
+		returns: (this returns a json array, rather than an object. formatted as such.):
+			[
+				{
+					"last_seen": last seen IP address, always in the first block of the array apparently
+					"ip": ip address in human readable form
+					"times": number of times IP was seen
+				},
+
+				{
+					"ip": ip address in human readable form
+					"times": number of times IP was seen
+				}
+			]
+		callback: no
+		behaviour: takes a ckey and returns an array of every IP used and times connected.
+
+	getCompIDs:
+		request:
+			ckey: player ckey
+		returns: (this returns a json array, rather than an object. formatted as such.):
+			[
+				{
+					"last_seen": last seen compID, always in the first block of the array apparently
+					"compID": compID in human readable form
+					"times": number of times compID was seen
+				},
+
+				{
+					"compID": compID in human readable form
+					"times": number of times compID was seen
+				}
+			]
+		callback: no
+		behaviour: takes a ckey and returns an array of every compID used and times connected.
+
+numbers: some numberstation game mechanic
+	get:
+		request: nothing
+		response: nothing
+		callback: yes, callback to /proc/lincolnshire_numbers with format:
+			numbers = space separated string of 21 numbers from 0 to 99
+		behaviour: this is pretty simple, just generate numbers
+
+
+callback: not really a request, but what the API sends in a topic. It has params too that will be important to understand
