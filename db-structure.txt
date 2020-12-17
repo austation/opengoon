@@ -1,0 +1,16 @@
+players table: stores general information about players
+columns:
+	ckey - primary key
+	ua - user agent
+	byondMajor - byond version
+	byondMinor - byond build
+	ip - last ip addy, in integer format
+	compid - last compid
+
+participation: stores information about rounds types for a player and times they got a role
+columns:
+	id - sequential number - primary key
+	ckey - player key
+	mode - round mode
+	selected - number of times selected for antag in this mode
+	seen - number of times seen in this mode

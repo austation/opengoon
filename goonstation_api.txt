@@ -10,7 +10,9 @@ api proc just returns 1 unless force is specified? from what I can tell, forceRe
 
 okay, so if force is NOT specified, the API processes and then does a callback to the server Topic() later on to handle things.
 
-response can also specify an error field to contain API errors. why this is handled in every proc that makes an API call I dunno, but it just is.
+response can also specify an error field to contain API errors. this error is handled in some places and not in others. goon code at work lol
+
+todo: ban sync
 
 notable files:
 all of api_handler.dm
@@ -69,12 +71,26 @@ versions: byond version tracking for players, including user agent
 			byondMinor = byond build
 		returns: nothing
 		callback: no
-		behaviour: stores given information into database for manual lookup I guess? It's never used again so whatever. Could probably get away with not implementing it
+		behaviour: stores given information into database for use in player stats
 
-gauntlet: some persistant data for a game area or adventure zone idk, needs investigation
-	getPrevious: probably get the data for previous session
+gauntlet: some persistant data for critter gauntlet
+	getPrevious:
+		request:
+			key = user key
+		returns: nothing
+		callback: yes - callback to /proc/query/GauntletMatches with data (json representation):
+			{
+				"keys": [
+					"foo",
+					"bar"
+				],
 
-participation: just record rounds a player was in, only consists of the name
+				"foo": 10, // number is the number of matches found I guess
+				"bar": 15
+			}
+		behaviour: returns data for ckeys about critter gauntlet. Is basically number of matches played. I really don't know how this API area is actually updated lol, maybe through the goonhub log or something?
+
+participation: just record rounds a player was in, only consists of the name and mode
 	record:
 		request:
 			ckey = player key
@@ -102,13 +118,78 @@ map-switcher: *apparently*, goon requires the chosen map to literally be chosen 
 		behaviour: oh my god this is the worst, it literally tells CI to recompile the damn project with a different map, because there's no ondemand maploading, period
 
 bans: handle all that sweet ban type stuff
-	check: send data to server and get their ban data
-	add: add a new ban
-	edit: edit an existing ban
-	delete: delete a ban
-	updateLocal: pull down bans to update local storage
-	updateRemote: push all the bans up to remote I guess
-	parity: check if the remote and local dbs are synced
+	check:
+		request:
+			ckey = player ckey
+			compID = player compID
+			ip = player ip addr
+			record = 1/0 - 1 = new combination of ckey/id/compid which the DB should be updated with, 0 = seen before no need to update
+		returns:
+			none = 1/0 - 1 means no bans exist
+			exception = 1/0 - 1 means user exempted from bans NOTE: this and the above ONLY exist if they are true. otherwise, the result contains a list of each ban paired to an id
+			alt structure:
+				{
+					1: {
+						ckey = player ckey
+						ip = player ip addr
+						compID = player compID
+						id = ban id. this id is also the key for the json object, but it's here too for easy access.
+						previous = id of previous ban, if ban was for evasion. 0 if ban was admin applied
+						chain = c-c-c-combo breaker! - how many times an evasion ban has been applied
+						timestamp = byond realtime timestamp when ban is due to expire in minutes. 0 if ban is perma
+						reason = reason for ban
+						oakey = original banning admin key
+						akey = current banning admin key, "Auto Banner" in the case of an evasion ban
+						server = server banned from. may not be present if global ban.
+					}
+				}
+		callback: no
+		behaviour: returns data regarding a player's bans, note that it needs to check bans for the specific server. global bans should be returned always, but bans for other servers should be ignored.
+
+	add:
+		request:
+			ckey = player ckey
+			compID = player compID
+			ip = player ip addr
+			reason = ban reason
+			oakey = original admin key
+			akey = banning admin key
+			timestamp = byond realtime expiry timestamp in minutes
+			previous = id of previous ban, only set if ban is an evasion ban
+			chain = number of evasion bans, zero by default
+			server = only present if ban is server-specific, else not specified
+		returns: nothing
+		callback: no
+		behaviour: adds a new ban to the database with specified information
+
+	edit:
+		request:
+			id = ban id to edit
+			ckey = player ckey for ban
+			compID = player compID for ban
+			ip = player ip for ban
+			reason = ban reason
+			akey = banning admin key
+			timestamp = ban expiry timestamp in minutes from byond realtime
+			server = server ban applies to. only present if ban is not global
+		returns: nothing
+		callback: no
+		behaviour: edits the data for an existing ban
+
+	delete:
+		request:
+			id = ban id to delete
+			ckey = player ckey
+			compID = player compID
+			ip = player ip addr
+			akey = admin responsible
+		returns: nothing
+		callback: no
+		behaviour: deletes a ban. whether it's full deletion or setting a flag is not clear yet.
+
+	updateLocal: pull down bans to update local storage -- leaving unimplemented for now
+	updateRemote: push all the bans up to remote I guess -- leaving unimplemented for now
+	parity: check if the remote and local dbs are synced -- sort of leaving unimplemented; always returns in sync response
 
 playerInfo: handles player statistics
 	get:
@@ -174,5 +255,87 @@ numbers: some numberstation game mechanic
 			numbers = space separated string of 21 numbers from 0 to 99
 		behaviour: this is pretty simple, just generate numbers
 
+vpncheck:
+	request:
+		ip = target ip address
+		ckey = user ckey
+	returns:
+		whitelisted = 1/0, true is IP whitelisted from VPN checks
+		response = JSON response from VPN checker service. Server used by goon is ipinfo.io, example from their website included:
+			{
+				"vpn": true,
+				"proxy": false,
+				"tor": false,
+				"hosting": true,
+				"message": "blah" // only present if there was an error, i.e. rate limited
+			}
+	callback: no
+	behaviour: just queries a VPN check service for information about an IP, and also handles whitelisting.
+
+vpncheck-whitelist:
+	add:
+		request:
+			ckey = player ckey to whitelist
+			akey = key of admin whitelisting
+		returns: nothing
+		callback: no
+		behaviour: adds a ckey to the VPN whitelist
+
+	remove:
+		request:
+			ckey = player ckey to remove from whitelist
+			akey = key of admin removing from whitelist
+		returns: nothing
+		callback: no
+		behaviour: removes a ckey from the VPN whitelist
+
+playtimes: stores player playtimes
+	record-multiple:
+		request:
+			ckeys[foo], ckeys[bar] = playtime for different ckeys in seconds
+		returns: nothing
+		callback: no
+		behaviour: save player playtime information to DB
+
+jobbans: api endpoint to handle jobbanning
+	get:
+		player:
+			request:
+				ckey = player ckey
+			returns: an array of the jobs the player is banned from. this is mostly transparent to the API and is just a matter of parsing and storing. example array:
+				[
+					"Everything Except Assistant",
+					"Captain",
+					"Security Department"
+				]
+			callback: no
+			behaviour: just gets list of jobbanned jobs for a player
+
+	add:
+		request:
+			ckey = player ckey
+			akey = banning admin key
+			rank = rank to ban from
+			applicable_server = server id to ban from. this gets checked when returning results from the get endpoint by checking server ID in the request
+		returns: nothing
+		callback: no
+		behaviour: adds a player jobban to the DB
+
+	del:
+		request:
+			ckey = player ckey
+			rank = rank to remove ban from
+		returns: nothing
+		callback: no
+		behaviour: deletes a jobban from the DB
+
 
 callback: not really a request, but what the API sends in a topic. It has params too that will be important to understand
+these callbacks are Topic() calls to the server that sent the request.
+to make a callback, the server sending the topic needs to be IP whitelisted in the server config as the goonhubAPI server.
+The topic then needs to include a type parm with the value of "hubCallback"
+The following type params are also needed:
+data: the json-encoded data to be passed to the proc
+auth: md5 hash of the auth key
+proc: a proc to call
+datum: optional argument containing a reference to some object in the world to call the proc on

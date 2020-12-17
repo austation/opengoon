@@ -10,5 +10,6 @@ $databaseAddress = "127.0.0.1";
 $databaseUser = "root";
 // DB pass
 $databasePassword = "root";
-
+// DB name
+$databaseName = "goonhub"
 ?>
