@@ -26,23 +26,23 @@ function callback($addr, $port, $args, $proc, $datum = false) {
 	$response = socket_read($server, 100000);
 
 	if($response != "") {
-		if($response{0} == "\x00" || $response{1} == "\x83") { // make sure it's the right packet format
+		if($response[0] == "\x00" || $response[1] == "\x83") { // make sure it's the right packet format
 
 			// Actually begin reading the output:
-			$sizebytes = unpack('n', $response{2} . $response{3}); // array size of the type identifier and content
+			$sizebytes = unpack('n', $response[2] . $response[3]); // array size of the type identifier and content
 			$size = $sizebytes[1] - 1; // size of the string/floating-point (minus the size of the identifier byte)
 
-			if($response{4} == "\x2a") { // 4-byte big-endian floating-point
-				$unpackint = unpack('f', $response{5} . $response{6} . $response{7} . $response{8}); // 4 possible bytes: add them up together, unpack them as a floating-point
+			if($response[4] == "\x2a") { // 4-byte big-endian floating-point
+				$unpackint = unpack('f', $response[5] . $response[6] . $response[7] . $response[8]); // 4 possible bytes: add them up together, unpack them as a floating-point
 				return $unpackint[1];
 			}
-			else if($response{4} == "\x06") { // ASCII string
+			else if($response[4] == "\x06") { // ASCII string
 				$unpackstr = ""; // result string
 				$index = 5; // string index
 
 				while($size > 0) { // loop through the entire ASCII string
 					$size--;
-					$unpackstr .= $response{$index}; // add the string position to return string
+					$unpackstr .= $response[$index]; // add the string position to return string
 					$index++;
 				}
 				return $unpackstr;
