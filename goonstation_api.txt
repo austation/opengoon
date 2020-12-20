@@ -1,12 +1,12 @@
 API Endpoint is in config
 
-api call might look like http://api.austation.net/bans/check/?ckey=mcterra&date=blah&forceResponse=1&data_server=blah&auth=283vn4ht9458gv934nt9
+api call might look like http://api.austation.net/bans/check/?ckey=mcterra&date=blah&bypass=1&data_server=blah&auth=283vn4ht9458gv934nt9
 
 outgoing params are based on "sort-of-GET"(tm), with there being a / between the path and the ?, which kinddda breaks things
 
 API returns responses in JSON
 
-api proc just returns 1 unless force is specified? from what I can tell, forceResponse is used when data is to be recieved. It's unset when data is pushed to the API.
+api proc just returns 1 unless force is specified? from what I can tell, bypass is used when data is to be recieved. It's unset when data is pushed to the API.
 
 okay, so if force is NOT specified, the API processes and then does a callback to the server Topic() later on to handle things.
 
@@ -29,7 +29,7 @@ antags: used for antag stats for players
 			history = list of history for each player with following structure (in json as an example):
 				"history": {
 					"example_key (this would be a player's ckey)": {
-						"selected": 10, - number of times selected for a role in given mode
+						"selected": 10, - number of times selected for a given role in a given mode
 						"seen": 20 - number of times seen in a given mode
 					}
 				}
@@ -55,7 +55,7 @@ antags: used for antag stats for players
 	records:
 		request:
 			role: role selected for, one of two valid options
-			latejoin: 1 or 0 (boolean) if antag was latejoin. only used if role is given
+			latejoin: 1 or 0 (boolean) if antag was latejoin. only used if role is given. assuming latejoins don't count as weighting, code reinforces this
 			players[0][ckey] AND players[0][role], players[1][ckey] AND players[1][role], ... = ckeys for arbitrary amount of players to fetch history for, as well as roles - if only one player given, [] syntax is ommitted and only "players" is given
 			assday: 1 if ass day on. not present otherwise. only given when multiple player ckeys are provided, not singular. don't count for weighting.
 		returns: nothing
@@ -89,6 +89,7 @@ gauntlet: some persistant data for critter gauntlet
 				"bar": 15
 			}
 		behaviour: returns data for ckeys about critter gauntlet. Is basically number of matches played. I really don't know how this API area is actually updated lol, maybe through the goonhub log or something?
+				   actually you know what'd be real funny? if this actually incremented the match count... it is "getPrevious" after all... you know what? I'll implement that because it sounds like a good idea and hyper smart.
 
 participation: just record rounds a player was in, only consists of the name and mode
 	record:
@@ -295,9 +296,9 @@ playtimes: stores player playtimes
 			ckeys[foo], ckeys[bar] = playtime for different ckeys in seconds
 		returns: nothing
 		callback: no
-		behaviour: save player playtime information to DB
+		behaviour: save player playtime information to DB, used for playerinfo stuff I think
 
-jobbans: api endpoint to handle jobbanning
+jobbans: api endpoint to handle jobbanning - db done
 	get:
 		player:
 			request:

@@ -1,4 +1,4 @@
-players table: stores general information about players
+players: stores general information about players
 columns:
 	ckey - primary key
 	ua - user agent
@@ -6,11 +6,66 @@ columns:
 	byondMinor - byond build
 	ip - last ip addy, in integer format
 	compid - last compid
+	lastmode - last roundtype they played on, fuckfuckfuck why do I have to do this reeeeeeeeeee
 
-participation: stores information about rounds types for a player and times they got a role
+participation: stores information about rounds types for a player and how many times they were seen
 columns:
 	id - sequential number - primary key
 	ckey - player key
 	mode - round mode
-	selected - number of times selected for antag in this mode
 	seen - number of times seen in this mode
+
+antags: stores information about times selected for antag
+columns:
+	id - sequential number - primary key
+	ckey - player key
+	role - antag type
+	mode - round type, this is some shitcode that's basically cached in the player table lol
+	selected - times selected that count towards weighting
+	selectedTotal - times selected including ass day and latejoins (which don't count for weighting)
+
+gauntlet: persistant data for critter gauntlet
+columns:
+	ckey - primary key
+	amount - number of matches participated in
+
+vpn-whitelist: list of people whitelisted from the vpn checker
+columns:
+	ckey - primary key, just the name of the person whitelisted
+	akey - key of the admin who whitelisted them
+
+jobbans: applied jobbans and their servers
+columns:
+	id - primary key, sequential number
+	ckey - target ckey
+	role - role banned from
+	akey - banning admin key
+	applicable_server - can be empty, contains the server id to apply the ban to.
+
+bans: stores data for bans
+columns:
+	id - primary key, sequential number
+	ckey - player ckey
+	compID - banned compID
+	ip - banned ip addr
+	reason - ban reason
+	oakey - ckey of orginal banning admin
+	akey - ckey of banning admin
+	timestamp - timestamp for ban expiration in minutes, from byond.realtime
+	previous - id of previous ban, if this is an evasion ban
+	chain - number of evasion bans
+	server - exists if ban is server specific
+
+ip-history: stores history of ip address use
+columns:
+	id - primary key, sequential number
+	ckey - player ckey
+	ip - ip address
+	count - number of times connected with
+
+compid-history: stores history of compid use
+columns:
+	id - primary key, sequential number
+	ckey - player ckey
+	compid - player computer id
+	count - number of times connected with
