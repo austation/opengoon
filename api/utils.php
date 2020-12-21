@@ -1,5 +1,5 @@
 <?php
-require('config.php');
+require 'config.php';
 
 $JSON_SUCCESS = "{\"success\":true}"; // success value because I'm lazy af and don't wanna type it. We just use this to add a small body to requests with no return, so the server doesn't die.
 
@@ -55,7 +55,56 @@ function callback($addr, $port, $args, $proc, $datum = false) {
 			}
 		}
 	}
+}
 
+// Performs an SQL query using prepared statements, optionally binding and returning results
+// Returns false on fail
+function sql_query($query, $params, $returnValues = false) {
+	global $databaseAddress, $databaseUser, $databasePassword, $databaseName;
+	$result = false;
+	$db = mysqli_connect($databaseAddress, $databaseUser, $databasePassword, $databaseName);
+	$stmt = $db->stmt_init();
+	$stmt->prepare($query);
+	call_user_func_array(array($stmt, 'bind_param'), ref_values($params)); // this is CHAD
+
+	if($stmt->execute()) {
+		if(!$returnValues) {
+			$result = $stmt->affected_rows;
+		} else {
+			$meta = $stmt->result_metadata();
+			$result = array();
+			$row = array();
+			while ( $field = $meta->fetch_field() ) {
+				$parameters[] = &$row[$field->name];
+			}
+
+			call_user_func_array(array($stmt, 'bind_result'), ref_values($parameters));
+
+			while($stmt->fetch()) {
+				$i = array();
+				foreach($row as $key => $val) {
+					$i[$key] = $val;
+				}
+				$result[] = $i;
+			}
+		}
+	}
+
+	$stmt->close();
+	$db->close();
+	return $result;
+}
+
+// Referenceize arrays for arg passing
+function ref_values($arr){
+	if (strnatcmp(phpversion(),'5.3') >= 0) //Reference is required for PHP 5.3+
+	{
+		$refs = array();
+		foreach($arr as $key => $value)
+			$refs[$key] = &$arr[$key];
+		return $refs;
+	}
+	return $arr;
 }
 
 // Takes an array of keys to look for, and an associated list to check.
