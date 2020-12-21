@@ -56,8 +56,8 @@ if($amount) {
 	$stmt->prepare("UPDATE `gauntlet` SET `amount` = ? WHERE `ckey` = ?");
 	$stmt->bind_param('is', (int)$amount + 1, $_GET['key']);
 } else {
-	$stmt->prepare("INSERT INTO `gauntlet` VALUES (?, ?)");
-	$stmt->bind_param('si', $_GET['key'], 1);
+	$stmt->prepare("INSERT INTO `gauntlet` VALUES (?, 1)");
+	$stmt->bind_param('si', $_GET['key']);
 }
 if(!$stmt->execute()) {
 	return;
