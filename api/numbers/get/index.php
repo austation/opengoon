@@ -1,4 +1,6 @@
 <?php
+// numbers:get - this api just makes a callback to the server with a set of numbers for the numbers station adventure zone.
+
 // Boilerplate Request Validation and Includes Code
 require '../../config.php';
 require '../../utils.php';

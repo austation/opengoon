@@ -248,7 +248,7 @@ playerInfo: handles player statistics
 		callback: no
 		behaviour: takes a ckey and returns an array of every compID used and times connected.
 
-numbers: some numberstation game mechanic
+numbers: some numberstation game mechanic - IMPLEMENTED!!!
 	get:
 		request: nothing
 		response: nothing
@@ -256,7 +256,7 @@ numbers: some numberstation game mechanic
 			numbers = space separated string of 21 numbers from 0 to 99
 		behaviour: this is pretty simple, just generate numbers
 
-vpncheck:
+vpncheck: - IMPLEMENTED!!!
 	request:
 		ip = target ip address
 		ckey = user ckey

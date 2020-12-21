@@ -13,6 +13,9 @@ $databasePassword = "root";
 // DB name
 $databaseName = "goonhub";
 
+// VPN Checker Auth Key - Set to "none" to disable VPN checking and return all IPs as safe. Service used is ipinfo.io
+$vpnAuth = "none";
+
 // Assoc list of servers and their IP + port, tied to an ID
 $servers = [
 	1 => ['ip' => "127.0.0.1", 'port' => 2337]

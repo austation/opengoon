@@ -56,6 +56,11 @@ function callback($addr, $port, $args, $proc, $datum = false) {
 
 }
 
+// Gets a simple JSON error string for the API.
+function json_error($message) {
+	return "{\"error\": \"{$message}\"}";
+}
+
 // Simple logging functions
 function log_info($message) {
 	$file_handle = fopen("log.txt", 'w');
