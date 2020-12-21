@@ -92,7 +92,7 @@ gauntlet: some persistant data for critter gauntlet - IMPLEMENTED!!!
 				   actually you know what'd be real funny? if this actually incremented the match count... it is "getPrevious" after all... you know what? I'll implement that because it sounds like a good idea and hyper smart.
 				   oh my lord the formatting, why is it built for multiple keys LMAO
 
-participation: just record rounds a player was in, only consists of the name and mode
+participation: just record rounds a player was in, only consists of the name and mode - IMPLEMENTED!!!
 	record:
 		request:
 			ckey = player key
@@ -291,7 +291,7 @@ vpncheck-whitelist: - IMPLEMENTED!!!
 		callback: no
 		behaviour: removes a ckey from the VPN whitelist
 
-playtimes: stores player playtimes
+playtimes: stores player playtimes - IMPLEMENTED!!!
 	record-multiple:
 		request:
 			ckeys[foo], ckeys[bar] = playtime for different ckeys in seconds
