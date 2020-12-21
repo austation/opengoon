@@ -26,7 +26,7 @@ $stmt = $db->stmt_init();
 $stmt->prepare("SELECT * FROM `player` WHERE `ckey` = ?");
 $stmt->bind_param('s', $_GET['ckey']);
 if($stmt->execute()) {
-	if($stmt->num_rows()) { // they don't exist? lol f, try again later champ
+	if(!$stmt->num_rows()) { // they don't exist? lol f, try again later champ
 		echo json_error("Ckey doesn't exist in database.");
 		return;
 	}
@@ -35,6 +35,7 @@ if($stmt->execute()) {
 	return;
 }
 
+$stmt->close();
 $stmt = $db->stmt_init();
 $stmt->prepare("UPDATE `player` SET `ua` = ?, `byondMajor` = ?, `byondMinor` = ? WHERE `ckey` = ?");
 $stmt->bind_param('sii', $_GET[`ua`], $_GET['byondMajor'], $_GET['byondMinor'], $_GET['ckey']);
@@ -42,6 +43,9 @@ if(!$stmt->execute()) {
 	echo json_error("Failed to execute query.");
 	return;
 }
+
+$stmt->close();
+$db->close();
 
 echo $JSON_SUCCESS;
 ?>

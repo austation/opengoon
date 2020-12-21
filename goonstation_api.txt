@@ -62,7 +62,7 @@ antags: used for antag stats for players
 		callback: no
 		behaviour: stores either a single player or multiple players to the database for antag rounds.
 
-versions: byond version tracking for players, including user agent
+versions: byond version tracking for players, including user agent - IMPLEMENTED!!!
 	add:
 		request:
 			ckey = player ckey
@@ -73,12 +73,12 @@ versions: byond version tracking for players, including user agent
 		callback: no
 		behaviour: stores given information into database for use in player stats
 
-gauntlet: some persistant data for critter gauntlet
-	getPrevious:
+gauntlet: some persistant data for critter gauntlet - IMPLEMENTED!!!
+	getPrevious: lol this naming convention is so bad and inconsistent
 		request:
 			key = user key
 		returns: nothing
-		callback: yes - callback to /proc/query/GauntletMatches with data (json representation):
+		callback: yes - callback to /proc/queryGauntletMatches with data (json representation):
 			{
 				"keys": [
 					"foo",
@@ -90,6 +90,7 @@ gauntlet: some persistant data for critter gauntlet
 			}
 		behaviour: returns data for ckeys about critter gauntlet. Is basically number of matches played. I really don't know how this API area is actually updated lol, maybe through the goonhub log or something?
 				   actually you know what'd be real funny? if this actually incremented the match count... it is "getPrevious" after all... you know what? I'll implement that because it sounds like a good idea and hyper smart.
+				   oh my lord the formatting, why is it built for multiple keys LMAO
 
 participation: just record rounds a player was in, only consists of the name and mode
 	record:
@@ -273,7 +274,7 @@ vpncheck: - IMPLEMENTED!!!
 	callback: no
 	behaviour: just queries a VPN check service for information about an IP, and also handles whitelisting.
 
-vpncheck-whitelist:
+vpncheck-whitelist: - IMPLEMENTED!!!
 	add:
 		request:
 			ckey = player ckey to whitelist

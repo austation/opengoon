@@ -37,6 +37,7 @@ if($stmt->execute()) {
 }
 
 // No row in database, we're good to go
+$stmt->close();
 $stmt = $db->stmt_init();
 $stmt->prepare("INSERT INTO `vpn_whitelist` VALUES (?, ?)");
 $stmt->bind_param('ss', $_GET['ckey'], $_GET['akey']);
@@ -44,6 +45,9 @@ if(!$stmt->execute()) {
 	echo json_error("Failed to insert values into DB.");
 	return;
 }
+
+$stmt->close();
+$db->close();
 
 echo $JSON_SUCCESS;
 ?>

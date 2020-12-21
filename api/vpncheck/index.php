@@ -28,7 +28,10 @@ if(!mysqli_connect_errno()) {
 			$whitelisted = true;
 		}
  	}
+	$stmt->close();
 }
+
+$db->close();
 
 $result = ['whitelisted' => $whitelisted, 'response' => ''];
 // We have no authorization to make a query, so just tell the server the IP is safe.

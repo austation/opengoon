@@ -23,7 +23,6 @@ if(mysqli_connect_errno()) {
 	return;
 }
 
-// No row in database, we're good to go
 $stmt = $db->stmt_init();
 $stmt->prepare("DELETE FROM `vpn_whitelist` WHERE `ckey` = ?");
 $stmt->bind_param('ss', $_GET['ckey']);
@@ -31,6 +30,9 @@ if(!$stmt->execute()) {
 	echo json_error("Failed to delete values from DB.");
 	return;
 }
+
+$stmt->close();
+$db->close();
 
 echo $JSON_SUCCESS;
 ?>
