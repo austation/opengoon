@@ -11,24 +11,35 @@ if(!key_exists('auth', $_GET) || $_GET['auth'] !== md5($authKey) || !key_exists(
 	return;
 }
 
-if(!check_params(['ckey', 'akey'], $_GET)) {
+if(!check_params(['ckey', 'ua', 'byondMajor', 'byondMinor'], $_GET)) {
 	echo json_error("Malformed request to the API. Missing params.");
 	return;
 }
 
-// Do a query to check if there's a row already; we can't whitelist if they already have an entry.
 $db = mysqli_connect($databaseAddress, $databaseUser, $databasePassword, $databaseName);
 if(mysqli_connect_errno()) {
 	echo json_error("Failed to connect to the database.");
 	return;
 }
 
-// No row in database, we're good to go
 $stmt = $db->stmt_init();
-$stmt->prepare("DELETE FROM `vpn_whitelist` WHERE `ckey` = ?");
-$stmt->bind_param('ss', $_GET['ckey']);
+$stmt->prepare("SELECT * FROM `player` WHERE `ckey` = ?");
+$stmt->bind_param('s', $_GET['ckey']);
+if($stmt->execute()) {
+	if($stmt->num_rows()) { // they don't exist? lol f, try again later champ
+		echo json_error("Ckey doesn't exist in database.");
+		return;
+	}
+} else {
+	echo json_error("Failed to query database.");
+	return;
+}
+
+$stmt = $db->stmt_init();
+$stmt->prepare("UPDATE `player` SET `ua` = ?, `byondMajor` = ?, `byondMinor` = ? WHERE `ckey` = ?");
+$stmt->bind_param('sii', $_GET[`ua`], $_GET['byondMajor'], $_GET['byondMinor'], $_GET['ckey']);
 if(!$stmt->execute()) {
-	echo json_error("Failed to delete values from DB.");
+	echo json_error("Failed to execute query.");
 	return;
 }
 

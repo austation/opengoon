@@ -58,6 +58,15 @@ function callback($addr, $port, $args, $proc, $datum = false) {
 
 }
 
+// Takes an array of keys to look for, and an associated list to check.
+// Returns true if all keys present, false otherwise
+function check_params($keys, $assocList) {
+	foreach($keys as $key) {
+		if(!key_exists($key, $assocList)) return false;
+	}
+	return true;
+}
+
 // Gets a simple JSON error string for the API.
 function json_error($message) {
 	return "{\"error\": \"{$message}\"}";

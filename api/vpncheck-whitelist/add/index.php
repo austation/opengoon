@@ -1,7 +1,7 @@
 <?php
 // Boilerplate Request Validation and Includes Code
-require '../config.php';
-require '../utils.php';
+require '../../config.php';
+require '../../utils.php';
 
 header("Content-Type: application/json");
 
@@ -11,8 +11,8 @@ if(!key_exists('auth', $_GET) || $_GET['auth'] !== md5($authKey) || !key_exists(
 	return;
 }
 
-if(!key_exists('ckey', $_GET) || !key_exists('akey', $_GET)) {
-	echo json_error("Malformed request to the API. Missing 'ip' or 'ckey' params.");
+if(!check_params(['ckey', 'akey'], $_GET)) {
+	echo json_error("Malformed request to the API. Missing params.");
 	return;
 }
 

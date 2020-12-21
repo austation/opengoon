@@ -11,8 +11,8 @@ if(!key_exists('auth', $_GET) || $_GET['auth'] !== md5($authKey) || !key_exists(
 	return;
 }
 
-if(!key_exists('ip', $_GET) || !key_exists('ckey', $_GET)) {
-	echo json_error("Malformed request to the API. Missing 'ip' or 'ckey' params.");
+if(!check_params(['ckey', 'ip'], $_GET)) {
+	echo json_error("Malformed request to the API. Missing params.");
 	return;
 }
 
