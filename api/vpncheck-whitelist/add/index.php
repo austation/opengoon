@@ -16,38 +16,13 @@ if(!check_params(['ckey', 'akey'], $_GET)) {
 	return;
 }
 
-// Do a query to check if there's a row already; we can't whitelist if they already have an entry.
-$db = mysqli_connect($databaseAddress, $databaseUser, $databasePassword, $databaseName);
-if(mysqli_connect_errno()) {
-	echo json_error("Failed to connect to the database.");
+if(sql_query("SELECT * FROM `vpn_whitelist` WHERE `ckey` = ?", ['s', $_GET['ckey']])) {
+	echo json_error("Ckey already exists.");
 	return;
 }
 
-$stmt = $db->stmt_init();
-$stmt->prepare("SELECT * FROM `vpn_whitelist` WHERE `ckey` = ?");
-$stmt->bind_param('s', $_GET['ckey']);
-if($stmt->execute()) {
-	if($stmt->num_rows()) { // they're whitelisted
-		echo json_error("Ckey is already whitelisted.");
-		return;
-	}
-} else {
-	echo json_error("Failed to query database.");
-	return;
-}
-
-// No row in database, we're good to go
-$stmt->close();
-$stmt = $db->stmt_init();
-$stmt->prepare("INSERT INTO `vpn_whitelist` VALUES (?, ?)");
-$stmt->bind_param('ss', $_GET['ckey'], $_GET['akey']);
-if(!$stmt->execute()) {
-	echo json_error("Failed to insert values into DB.");
-	return;
-}
-
-$stmt->close();
-$db->close();
+sql_query("INSERT INTO `vpn_whitelist` VALUES (?, ?)", ['ss', $_GET['ckey'], $_GET['akey']]);
 
 echo $JSON_SUCCESS;
+
 ?>

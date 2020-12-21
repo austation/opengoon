@@ -17,23 +17,9 @@ if(!check_params(['ckey', 'ip'], $_GET)) {
 }
 
 // Don't kill the whole endpoint if DB dead. Fail safe and tell the server they're not whitelisted, if DB can't be reached
-$whitelisted = false;
-$db = mysqli_connect($databaseAddress, $databaseUser, $databasePassword, $databaseName);
-if(!mysqli_connect_errno()) {
-	$stmt = $db->stmt_init();
-	$stmt->prepare("SELECT * FROM `vpn_whitelist` WHERE `ckey` = ?");
-	$stmt->bind_param('s', $_GET['ckey']);
-	if($stmt->execute()) {
-		if($stmt->num_rows()) { // they're whitelisted
-			$whitelisted = true;
-		}
- 	}
-	$stmt->close();
-}
+$output = sql_query("SELECT * FROM `vpn_whitelist` WHERE `ckey` = ?", ['s', $_GET['ckey']], false, true);
 
-$db->close();
-
-$result = ['whitelisted' => $whitelisted, 'response' => ''];
+$result = ['whitelisted' => boolval($output), 'response' => ''];
 // We have no authorization to make a query, so just tell the server the IP is safe.
 if($vpnAuth === "none") {
 	$result['response'] = json_encode(['vpn' => false, 'tor' => false, 'proxy' => false, 'hosting' => false]);

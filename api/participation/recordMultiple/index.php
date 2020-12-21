@@ -16,63 +16,20 @@ if(!check_params(['ckeys[0]', 'round_mode'], $_GET)) {
 	return;
 }
 
-$db = mysqli_connect($databaseAddress, $databaseUser, $databasePassword, $databaseName);
-if(mysqli_connect_errno()) {
-	echo json_error("Failed to connect to the database.");
-	return;
-}
-
 $curIndex = 0;
 while(key_exists("ckeys[{$curIndex}]", $_GET)) {
-	$stmt = $db->stmt_init();
-	$stmt->prepare("SELECT * FROM `player` WHERE `ckey` = ?");
-	$stmt->bind_param('s', $_GET["ckeys[{$curIndex}]"]);
-	if($stmt->execute()) {
-		if(!$stmt->num_rows()) { // they don't exist? lol f, try again later champ - if this ever happens, we shouldn't fail completely. just move on to the next ckey.
-			continue;
-		}
-	} else {
-		echo json_error("Failed to query database.");
-		return;
+	if(!sql_query("SELECT * FROM `player` WHERE `ckey` = ?", ['s', $_GET["ckeys[{$curIndex}]"]])) {
+		continue; // they don't exist? lol f, try again later champ - if this ever happens, we shouldn't fail completely. just move on to the next ckey.
 	}
 
-	$stmt->close();
-	$seen = 0;
-	$stmt = $db->stmt_init();
-	$stmt->prepare("SELECT `seen` FROM `participation` WHERE `ckey` = ? AND `mode` = ?");
-	$stmt->bind_param('ss', $_GET["ckeys[{$curIndex}]"], $_GET['round_mode']);
-	if($stmt->execute()) {
-		if($stmt->num_rows()) {
-			$stmt->bind_result($seen);
-			$stmt->fetch();
-		}
-	} else {
-		echo json_error("Failed to query database.");
-		return;
-	}
+	$result = sql_query("SELECT `seen` FROM `participation` WHERE `ckey` = ? AND `mode` = ?", ['ss', $_GET["ckeys[{$curIndex}]"], $_GET['round_mode']], true);
 
-	$stmt->close();
-	// Now update the player table
-	$stmt = $db->stmt_init();
-	$stmt->prepare("UPDATE `player` SET `lastmode` = ? WHERE `ckey` = ?");
-	$stmt->bind_param('ss', $_GET['round_mode'], $_GET["ckeys[{$curIndex}]"]);
-	if(!$stmt->execute()) {
-		echo json_error("Failed to query database.");
-		return;
-	}
+	sql_query("UPDATE `player` SET `lastmode` = ? WHERE `ckey` = ?", ['ss', $_GET['round_mode'], $_GET["ckeys[{$curIndex}]"]]);
 
-	$stmt->close();
-	$stmt = $db->stmt_init();
-	if($seen) {
-		$stmt->prepare("UPDATE `participation` SET `seen` = ? WHERE `ckey` = ? AND `mode` = ?");
-		$stmt->bind_param('iss', $seen + 1, $_GET["ckeys[{$curIndex}]"], $_GET['round_mode']);
+	if($result) {
+		sql_query("UPDATE `participation` SET `seen` = ? WHERE `ckey` = ? AND `mode` = ?", ['iss', $result[0]['seen'] + 1, $_GET["ckeys[{$curIndex}]"], $_GET['round_mode']]);
 	} else {
-		$stmt->prepare("INSERT INTO `participation` VALUES (?, ?, 1)");
-		$stmt->bind_param('ss', $_GET["ckeys[{$curIndex}]"], $_GET['round_mode']);
-	}
-	if(!$stmt->execute()) {
-		echo json_error("Failed to query database.");
-		return;
+		sql_query("INSERT INTO `participation` VALUES (?, ?, 1)", ['ss', $_GET["ckeys[{$curIndex}]"], $_GET['round_mode']]);
 	}
 
 	$curIndex++;

@@ -16,23 +16,8 @@ if(!check_params(['ckey', 'akey'], $_GET)) {
 	return;
 }
 
-// Do a query to check if there's a row already; we can't whitelist if they already have an entry.
-$db = mysqli_connect($databaseAddress, $databaseUser, $databasePassword, $databaseName);
-if(mysqli_connect_errno()) {
-	echo json_error("Failed to connect to the database.");
-	return;
-}
-
-$stmt = $db->stmt_init();
-$stmt->prepare("DELETE FROM `vpn_whitelist` WHERE `ckey` = ?");
-$stmt->bind_param('ss', $_GET['ckey']);
-if(!$stmt->execute()) {
-	echo json_error("Failed to delete values from DB.");
-	return;
-}
-
-$stmt->close();
-$db->close();
+sql_query("DELETE FROM `vpn_whitelist` WHERE `ckey` = ?", ['ss', $_GET['ckey']]);
 
 echo $JSON_SUCCESS;
+
 ?>

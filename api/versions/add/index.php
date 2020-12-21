@@ -16,36 +16,13 @@ if(!check_params(['ckey', 'ua', 'byondMajor', 'byondMinor'], $_GET)) {
 	return;
 }
 
-$db = mysqli_connect($databaseAddress, $databaseUser, $databasePassword, $databaseName);
-if(mysqli_connect_errno()) {
-	echo json_error("Failed to connect to the database.");
+if(!sql_query("SELECT * FROM `player` WHERE `ckey` = ?", ['s', $_GET['ckey']])) {
+	echo json_error("Ckey doesn't exist in database.");
 	return;
 }
 
-$stmt = $db->stmt_init();
-$stmt->prepare("SELECT * FROM `player` WHERE `ckey` = ?");
-$stmt->bind_param('s', $_GET['ckey']);
-if($stmt->execute()) {
-	if(!$stmt->num_rows()) { // they don't exist? lol f, try again later champ
-		echo json_error("Ckey doesn't exist in database.");
-		return;
-	}
-} else {
-	echo json_error("Failed to query database.");
-	return;
-}
-
-$stmt->close();
-$stmt = $db->stmt_init();
-$stmt->prepare("UPDATE `player` SET `ua` = ?, `byondMajor` = ?, `byondMinor` = ? WHERE `ckey` = ?");
-$stmt->bind_param('sii', $_GET[`ua`], $_GET['byondMajor'], $_GET['byondMinor'], $_GET['ckey']);
-if(!$stmt->execute()) {
-	echo json_error("Failed to execute query.");
-	return;
-}
-
-$stmt->close();
-$db->close();
+sql_query("UPDATE `player` SET `ua` = ?, `byondMajor` = ?, `byondMinor` = ? WHERE `ckey` = ?", ['sii', $_GET[`ua`], $_GET['byondMajor'], $_GET['byondMinor'], $_GET['ckey']]);
 
 echo $JSON_SUCCESS;
+
 ?>

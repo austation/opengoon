@@ -32,40 +32,14 @@ ob_flush();
 flush();
 if(session_id()) session_write_close();
 
-$db = mysqli_connect($databaseAddress, $databaseUser, $databasePassword, $databaseName);
-if(mysqli_connect_errno()) {
-	return;
-}
+$result = sql_query("SELECT `amount` FROM `gauntlet` WHERE `ckey` = ?", ['s', "INSERT INTO `gauntlet` VALUES (?, 1)"]);
 
-$amount = 0;
-$stmt = $db->stmt_init();
-$stmt->prepare("SELECT `amount` FROM `gauntlet` WHERE `ckey` = ?");
-$stmt->bind_param('s', $_GET['key']);
-if($stmt->execute()) {
-	if($stmt->num_rows()) { // they're in the DB, fetch number of matches
-		$stmt->bind_result($amount);
-		$stmt->fetch();
-	}
+if($result) {
+	sql_query("UPDATE `gauntlet` SET `amount` = ? WHERE `ckey` = ?", ['is', $result[0]['amount'], $_GET['key']]);
 } else {
-	return;
+	sql_query("INSERT INTO `gauntlet` VALUES (?, 1)", ['s', $_GET['key']]);
 }
 
-$stmt->close();
-$stmt = $db->stmt_init();
-if($amount) {
-	$stmt->prepare("UPDATE `gauntlet` SET `amount` = ? WHERE `ckey` = ?");
-	$stmt->bind_param('is', (int)$amount + 1, $_GET['key']);
-} else {
-	$stmt->prepare("INSERT INTO `gauntlet` VALUES (?, 1)");
-	$stmt->bind_param('si', $_GET['key']);
-}
-if(!$stmt->execute()) {
-	return;
-}
-
-$stmt->close();
-$db->close();
-
-$result = ['keys' => [$_GET['key']], $_GET['key'] => (int)$amount]; // format result
+$result = ['keys' => [$_GET['key']], $_GET['key'] => $result[0]['amount']]; // format result
 callback($servers[$serverKey]['ip'], $servers[$serverKey]['port'], $result, "queryGauntletMatches");
 ?>

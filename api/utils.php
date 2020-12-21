@@ -58,17 +58,21 @@ function callback($addr, $port, $args, $proc, $datum = false) {
 }
 
 // Performs an SQL query using prepared statements, optionally binding and returning results
-// Returns false on fail
-function sql_query($query, $params, $returnValues = false) {
+// Murders everything on fail
+function sql_query($query, $params, $returnValues = false, $failSafe = false) {
 	global $databaseAddress, $databaseUser, $databasePassword, $databaseName;
 	$result = false;
 	$db = mysqli_connect($databaseAddress, $databaseUser, $databasePassword, $databaseName);
+	if(mysqli_connect_errno() && !$failSafe){
+		echo json_error("Couldn't connect to DB");
+		exit;
+	}
 	$stmt = $db->stmt_init();
 	$stmt->prepare($query);
 	call_user_func_array(array($stmt, 'bind_param'), ref_values($params)); // this is CHAD
 
 	if($stmt->execute()) {
-		if(!$returnValues) {
+		if(!$returnValues || $stmt->affected_rows == 0) {
 			$result = $stmt->affected_rows;
 		} else {
 			$meta = $stmt->result_metadata();
@@ -88,6 +92,9 @@ function sql_query($query, $params, $returnValues = false) {
 				$result[] = $i;
 			}
 		}
+	} elseif(!$failSafe) {
+		echo json_error("Couldn't execute query");
+		exit;
 	}
 
 	$stmt->close();
