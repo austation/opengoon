@@ -114,6 +114,19 @@ function ref_values($arr){
 	return $arr;
 }
 
+function ip_to_int($ipStr) {
+	$arr = preg_split('/./', $ipStr);
+	return ($arr[0] * (256 ** 3)) + ($arr[1] * (256 ** 2)) + ($arr[2] * 256) + ($arr[3]);
+}
+
+function int_to_ip($ipInt) {
+	$one = $ipInt & 255;
+	$two = $ipInt & 65280 >> 8;
+	$three = ($ipInt & 16711680) >> 16;
+	$four = ($ipInt & 4278190080) >> 24;
+	return $four . '.' . $three . '.' . $two . '.' . $one;
+}
+
 // Takes an array of keys to look for, and an associated list to check.
 // Returns true if all keys present, false otherwise
 function check_params($keys, $assocList) {
