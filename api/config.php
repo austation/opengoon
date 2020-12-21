@@ -11,5 +11,10 @@ $databaseUser = "root";
 // DB pass
 $databasePassword = "root";
 // DB name
-$databaseName = "goonhub"
+$databaseName = "goonhub";
+
+// Assoc list of servers and their IP + port, tied to an ID
+$servers = [
+	1 => ['ip' => "127.0.0.1", 'port' => 2337]
+];
 ?>
