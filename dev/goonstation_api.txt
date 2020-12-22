@@ -109,7 +109,7 @@ participation: just record rounds a player was in, only consists of the name and
 		callback: no
 		behaviour: records round participation for multiple players at a time.
 
-map-switcher: *apparently*, goon requires the chosen map to literally be chosen at compile time, so this is done by API. Guess I can edit the dme on the fly for this one...
+map-switcher: *apparently*, goon requires the chosen map to literally be chosen at compile time, so this is done by API. Guess I can edit the dme on the fly for this one... - IMPLEMENTED!!! (sort of)
 	switch:
 		request:
 			cause: reason for map switch
