@@ -193,7 +193,7 @@ bans: handle all that sweet ban type stuff
 	updateRemote: push all the bans up to remote I guess -- leaving unimplemented for now
 	parity: check if the remote and local dbs are synced -- sort of leaving unimplemented; always returns in sync response
 
-playerInfo: handles player statistics
+playerInfo: handles player statistics - IMPLEMENTED!!!
 	get:
 		request:
 			ckey: player ckey
@@ -299,17 +299,19 @@ playtimes: stores player playtimes - IMPLEMENTED!!!
 		callback: no
 		behaviour: save player playtime information to DB, used for playerinfo stuff I think
 
-jobbans: api endpoint to handle jobbanning - db done
+jobbans: api endpoint to handle jobbanning - IMPLEMENTED!!!
 	get:
 		player:
 			request:
 				ckey = player ckey
 			returns: an array of the jobs the player is banned from. this is mostly transparent to the API and is just a matter of parsing and storing. example array:
-				[
-					"Everything Except Assistant",
-					"Captain",
-					"Security Department"
-				]
+				{
+					"ckey": [
+						"Everything Except Assistant",
+						"Captain",
+						"Security Department"
+					]
+				}
 			callback: no
 			behaviour: just gets list of jobbanned jobs for a player
 
@@ -329,7 +331,7 @@ jobbans: api endpoint to handle jobbanning - db done
 			rank = rank to remove ban from
 		returns: nothing
 		callback: no
-		behaviour: deletes a jobban from the DB
+		behaviour: deletes a jobban from the DB, interestingly it wipes for *all* servers
 
 
 callback: not really a request, but what the API sends in a topic. It has params too that will be important to understand
