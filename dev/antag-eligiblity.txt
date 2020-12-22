@@ -1,0 +1,32 @@
+Basically, find all the roundstart antags that can appear in each mode!
+Okay
+Let's go!
+
+Note: three antags specified in the config are NOT checked: alien, predator and wrestler.
+alien/pred stuff appears to be removed, wrestler is a midround.
+latejoins use a snowflake weighting system instead.
+
+NOTE: possible double-weighting of wraiths and others. Investigate during testing. Can probably be fixed by commenting some lines in gameticker.dm
+
+Traitor => [Traitor, Wraith]
+Wizard => [Wizard]
+Waldo => [Waldo]
+Vampire => [Vampire, Wraith, Grinch]
+Conspiracy(Spy and Conspiracy) => [Spy, Conspirator] - Note: this is a weird one. Both spy AND conspiracy have the same name sent to the API. Guess they weight together?
+Spy_Thief => [Spy_Thief]
+Revolution => [Head_Rev]
+Corporate Restructuring => []
+Nuclear Emergency => [Nukeop]
+Monkey => []
+Mixed (Action) => [Traitor, Changeling, Vampire, Spy_Thief, Werewolf, Wizard, Blob, Wraith, Grinch]
+Mixed (Mild) => [Traitor, Changeling, Vampire, Spy_Thief, Wraith, Grinch]
+AI Malfunction => []
+Gang => [Gang Leader]
+Football => []
+Flock => [Flockmind]
+Extended => []
+Disaster => []
+Changeling => [Changeling]
+Blob => [Blob]
+Battle Royale => [Battler] - Note: no weighting
+Everyone-Is-A-Traitor Mode => [Traitor, Wraith] - Note: Actually uses weighting, even with 169 tots

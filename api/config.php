@@ -20,4 +20,28 @@ $vpnAuth = "none";
 $servers = [
 	1 => ['ip' => "127.0.0.1", 'port' => 2337]
 ];
+
+
+
+
+// This associated list pairs a mode with all the possible roundstart antags it can have. You probably shouldn't edit this.
+// If a key is not present, the mode has no roundstart antags
+$modes = [
+	'traitor' => ['traitor', 'wraith'],
+	'wizard' => ['wizard'],
+	'waldo' => ['waldo'],
+	'vampire' => ['vampire', 'wraith', 'grinch'],
+	'conspiracy' => ['spy', 'conspirator'], // the funky one. actually covers two modes with the same internal name. Spy and Conspiracy
+	'spy_thief' => ['spy_thief'],
+	'revolution' => ['head_rev'],
+	'nuclear emergency' => ['nukeop'],
+	'mixed (action)' => ['traitor', 'changeling', 'vampire', 'spy_thief', 'werewolf', 'wizard', 'blob', 'wraith', 'grinch'],
+	'mixed (mild)' => ['traitor', 'changeling', 'vampire', 'spy_thief', 'wraith', 'grinch'],
+	'gang' => ['gang_leader'],
+	'flock' => ['flockmind'],
+	'changeling' => ['changeling'],
+	'blob' => ['blob'],
+	'Battle Royale' => ['battler'],
+	'Everyone-Is-A-Traitor Mode' => ['traitor', 'wraith']
+];
 ?>

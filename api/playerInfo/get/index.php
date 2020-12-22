@@ -24,14 +24,6 @@ if(!$player) {
 }
 $player = $player[0]; // sneaky simplification
 
-$participated = 0;
-$return = sql_query("SELECT `seen` FROM `participated` WHERE `ckey` = ?", ['s', $_GET['ckey']], true);
-if($return) {
-	foreach($return as $row) {
-		$participated += $row['seen'];
-	}
-}
-
 $parser = new parseUserAgentStringClass();
 $parser->includeAndroidName = true;
 $parser->includeWindowsName = true;
@@ -40,7 +32,7 @@ $parser->parseUserAgentString($player['ua']);
 
 $response = [
 	'seen' => $player['connections'],
-	'participated' => $participated,
+	'participated' => $player['participated'],
 	'byondMajor' => $player['byondMajor'],
 	'byondMinor' => $player['byondMinor'],
 	'platform' => $parser->osname,

@@ -21,14 +21,17 @@ if(!sql_query("SELECT * FROM `player` WHERE `ckey` = ?", ['s', $_GET['ckey']])) 
 	return;
 }
 
-$result = sql_query("SELECT `seen` FROM `participation` WHERE `ckey` = ? AND `mode` = ?", ['ss', $_GET['ckey'], $_GET['round_mode']], true);
+sql_query("UPDATE `player` SET `participations` = `participations` + 1 WHERE `ckey` = ?", ['s', $_GET['ckey']]);
 
-sql_query("UPDATE `player` SET `lastmode` = ? WHERE `ckey` = ?", ['ss', $_GET['round_mode'], $_GET['ckey']]);
-
-if($result) {
-	sql_query("UPDATE `participation` SET `seen` = ? WHERE `ckey` = ? AND `mode` = ?", ['iss', $result[0]['seen'] + 1, $_GET['ckey'], $_GET['round_mode']]);
-} else {
-	sql_query("INSERT INTO `participation` VALUES (?, ?, 1)", ['ss', $_GET['ckey'], $_GET['round_mode']]);
+if(key_exists($_GET['round_mode'], $modes)) { // the mode has roundstart antags attached. let's update those for weighting.
+	foreach($modes[$_GET['round_mode']] as $antag) { // loop over each possible antag for the mode
+		// check if the DB has the mode or not
+		if(!sql_query("SELECT * FROM `antag` WHERE `ckey` = ? AND `role` = ?", ['ss', $_GET['ckey'], $antag])) { // it doesn't exist in the db
+			sql_query("INSERT INTO `antag` VALUES (?, ?, 0, 1)", ['ss', $_GET['ckey'], $antag]); // create a row for the antag
+		} else { // does exist
+			sql_query("UPDATE `antag` SET `seen` = `seen` + 1 WHERE `ckey` = ? AND `role` = ?", ['ss', $_GET['ckey'], $antag]); // update existing row
+		}
+	}
 }
 
 echo $JSON_SUCCESS;
