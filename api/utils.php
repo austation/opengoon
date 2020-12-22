@@ -138,7 +138,7 @@ function check_params($keys, $assocList) {
 
 // Gets a simple JSON error string for the API.
 function json_error($message) {
-	return "{\"error\": \"{$message}\"}";
+	return json_encode(['error' => $message]);
 }
 
 // Simple logging functions
