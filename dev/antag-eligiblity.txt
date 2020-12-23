@@ -3,7 +3,7 @@ Okay
 Let's go!
 
 Note: three antags specified in the config are NOT checked: alien, predator and wrestler.
-alien/pred stuff appears to be removed, wrestler is a midround.
+alien/pred stuff appears to be removed, wrestler is a latejoin.
 latejoins use a snowflake weighting system instead.
 
 NOTE: possible double-weighting of wraiths and others. Investigate during testing. Can probably be fixed by commenting some lines in gameticker.dm

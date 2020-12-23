@@ -19,7 +19,7 @@ all of api_handler.dm
 world.dm lines from 1362
 
 API Usage and Exhaustive Endpoints:
-antags: used for antag stats for players
+antags: used for antag stats for players - IMPLEMENTED!!!
 	history:
 		request:
 			role = antagonist type, simple string
@@ -52,7 +52,7 @@ antags: used for antag stats for players
 		callback: no
 		behaviour: returns a full list of every role a player played in and the number and percentage of the times they were selected.
 
-	records:
+	record:
 		request:
 			role: role selected for, one of two valid options
 			latejoin: 1 or 0 (boolean) if antag was latejoin. only used if role is given. assuming latejoins don't count as weighting, code reinforces this

@@ -1,0 +1,2 @@
+After api is complete and tested, one thing I want to do is go through and find every instance where an error value isn't checked for by the server,
+and set them to return an error status code so there's at least *some* error handling.

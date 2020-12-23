@@ -28,7 +28,7 @@ while(key_exists("ckeys[{$curIndex}]", $_GET)) {
 		foreach($modes[$_GET['round_mode']] as $antag) { // loop over each possible antag for the mode
 			// check if the DB has the mode or not
 			if(!sql_query("SELECT * FROM `antag` WHERE `ckey` = ? AND `role` = ?", ['ss', $_GET["ckeys[{$curIndex}]"], $antag])) { // it doesn't exist in the db
-				sql_query("INSERT INTO `antag` VALUES (?, ?, 0, 1)", ['ss', $_GET["ckeys[{$curIndex}]"], $antag]); // create a row for the antag
+				sql_query("INSERT INTO `antag` VALUES (?, ?, 0, 0, 1)", ['ss', $_GET["ckeys[{$curIndex}]"], $antag]); // create a row for the antag
 			} else { // does exist
 				sql_query("UPDATE `antag` SET `seen` = `seen` + 1 WHERE `ckey` = ? AND `role` = ?", ['ss', $_GET["ckeys[{$curIndex}]"], $antag]); // update existing row
 			}

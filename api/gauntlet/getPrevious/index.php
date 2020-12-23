@@ -35,7 +35,7 @@ if(session_id()) session_write_close();
 $result = sql_query("SELECT `amount` FROM `gauntlet` WHERE `ckey` = ?", ['s', "INSERT INTO `gauntlet` VALUES (?, 1)"]);
 
 if($result) {
-	sql_query("UPDATE `gauntlet` SET `amount` = ? WHERE `ckey` = ?", ['is', $result[0]['amount'], $_GET['key']]);
+	sql_query("UPDATE `gauntlet` SET `amount` = `amount` + 1 WHERE `ckey` = ?", ['is', $_GET['key']]);
 } else {
 	sql_query("INSERT INTO `gauntlet` VALUES (?, 1)", ['s', $_GET['key']]);
 }
