@@ -23,6 +23,6 @@ if(!sql_query("SELECT * FROM `player` WHERE `ckey` = ?", ['s', $_GET['ckey']])) 
 
 sql_query("UPDATE `player` SET `ua` = ?, `byondMajor` = ?, `byondMinor` = ? WHERE `ckey` = ?", ['sii', $_GET[`ua`], $_GET['byondMajor'], $_GET['byondMinor'], $_GET['ckey']]);
 
-echo $JSON_SUCCESS;
+echo JSON_SUCCESS;
 
 ?>

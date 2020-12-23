@@ -36,6 +36,6 @@ if(!$updated) {
 	return;
 }
 
-echo $JSON_SUCCESS;
+echo JSON_SUCCESS;
 
 ?>

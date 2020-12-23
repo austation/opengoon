@@ -12,7 +12,10 @@ okay, so if force is NOT specified, the API processes and then does a callback t
 
 response can also specify an error field to contain API errors. this error is handled in some places and not in others. goon code at work lol
 
-todo: ban sync
+todo: ban sync, spin SQL queries out to functions once stuff is tested
+OH FUCK THERE'S HEAPS OF CALLBACKS FOR THE BANS ARGHHH
+OH FUCKKK notes uses a snowflake api system jesus christ
+okay cloud saves too
 
 notable files:
 all of api_handler.dm

@@ -31,6 +31,6 @@ if(empty($_GET['applicable_server'])) { // slightly different syntax if that's n
 }
 
 // we're done!
-echo $JSON_SUCCESS;
+echo JSON_SUCCESS;
 
 ?>

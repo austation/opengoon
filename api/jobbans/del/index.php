@@ -19,6 +19,6 @@ if(!check_params(['ckey', 'rank'], $_GET)) {
 // just do the delete query
 sql_query("DELETE FROM `jobbans` WHERE `ckey` = ? AND `role` = ?", ['ss', $_GET['ckey'], $_GET['rank']]);
 
-echo $JSON_SUCCESS;
+echo JSON_SUCCESS;
 
 ?>

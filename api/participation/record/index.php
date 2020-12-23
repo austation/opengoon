@@ -34,6 +34,6 @@ if(key_exists($_GET['round_mode'], $modes)) { // the mode has roundstart antags 
 	}
 }
 
-echo $JSON_SUCCESS;
+echo JSON_SUCCESS;
 
 ?>

@@ -38,6 +38,6 @@ while(key_exists("ckeys[{$curIndex}]", $_GET)) {
 	$curIndex++;
 }
 
-echo $JSON_SUCCESS;
+echo JSON_SUCCESS;
 
 ?>

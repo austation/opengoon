@@ -23,6 +23,6 @@ if(sql_query("SELECT * FROM `vpn_whitelist` WHERE `ckey` = ?", ['s', $_GET['ckey
 
 sql_query("INSERT INTO `vpn_whitelist` VALUES (?, ?)", ['ss', $_GET['ckey'], $_GET['akey']]);
 
-echo $JSON_SUCCESS;
+echo JSON_SUCCESS;
 
 ?>

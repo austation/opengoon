@@ -61,6 +61,6 @@ if(key_exists('players', $_GET)) {
 	return;
 }
 
-echo $JSON_SUCCESS;
+echo JSON_SUCCESS;
 
 ?>

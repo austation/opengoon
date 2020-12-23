@@ -18,7 +18,7 @@ $serverKey = $_GET['data_server'];
 // Send the response to the client - this code is for efficiency, and lets callbacks happen in the background without the server waiting for a response (the whole point of a callback is to run in the background lmao)
 // This is just boilerplate
 ob_start();
-echo $JSON_SUCCESS; // Tidbit of json so the server won't screech because no body
+echo JSON_SUCCESS; // Tidbit of json so the server won't screech because no body
 $size = ob_get_length();
 header("Content-Encoding: none");
 header("Content-Length: {$size}");
