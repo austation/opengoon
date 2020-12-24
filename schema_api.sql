@@ -33,15 +33,15 @@ CREATE TABLE IF NOT EXISTS `compid_history` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Commented out for now, will probably remove completely, depending.
---DROP TABLE IF EXISTS `participation`;
---CREATE TABLE IF NOT EXISTS `participation` (
---	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
---	`ckey` VARCHAR(32) NOT NULL,
---	`mode` VARCHAR(32) NOT NULL,
---	`seen` SMALLINT UNSIGNED NOT NULL,
---	`seen_total` SMALLINT UNSIGNED NOT NULL,
---	PRIMARY KEY (`id`)
---) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- DROP TABLE IF EXISTS `participation`;
+-- CREATE TABLE IF NOT EXISTS `participation` (
+-- 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+-- 	`ckey` VARCHAR(32) NOT NULL,
+-- 	`mode` VARCHAR(32) NOT NULL,
+-- 	`seen` SMALLINT UNSIGNED NOT NULL,
+-- 	`seen_total` SMALLINT UNSIGNED NOT NULL,
+-- 	PRIMARY KEY (`id`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `antag`;
 CREATE TABLE IF NOT EXISTS `antag` (

@@ -13,9 +13,11 @@ okay, so if force is NOT specified, the API processes and then does a callback t
 response can also specify an error field to contain API errors. this error is handled in some places and not in others. goon code at work lol
 
 todo: ban sync, spin SQL queries out to functions once stuff is tested
-OH FUCK THERE'S HEAPS OF CALLBACKS FOR THE BANS ARGHHH
 OH FUCKKK notes uses a snowflake api system jesus christ
 okay cloud saves too
+
+Note: to get things working gooncode needs to be slightly modified to remove the / between the url and ? + params for stuff that queries this API.
+Note: ban parity api calls exist in the code, but they are never used. All ban handling is entirely remote.
 
 notable files:
 all of api_handler.dm
@@ -191,10 +193,6 @@ bans: handle all that sweet ban type stuff
 		returns: nothing
 		callback: no
 		behaviour: deletes a ban. whether it's full deletion or setting a flag is not clear yet.
-
-	updateLocal: pull down bans to update local storage -- leaving unimplemented for now
-	updateRemote: push all the bans up to remote I guess -- leaving unimplemented for now
-	parity: check if the remote and local dbs are synced -- sort of leaving unimplemented; always returns in sync response
 
 playerInfo: handles player statistics - IMPLEMENTED!!!
 	get:

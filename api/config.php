@@ -41,7 +41,7 @@ $modes = [
 	'flock' => ['flockmind'],
 	'changeling' => ['changeling'],
 	'blob' => ['blob'],
-	'Battle Royale' => ['battler'],
+	'Battle Royale' => ['battler'], // no actual weighting, but gotta get that sweet data, yo!
 	'Everyone-Is-A-Traitor Mode' => ['traitor', 'wraith']
 ];
 ?>
