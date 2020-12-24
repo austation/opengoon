@@ -143,14 +143,25 @@ function json_error($message) {
 
 // Simple logging functions
 function log_info($message) {
-	$file_handle = fopen("log.txt", 'w');
+	$file_handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/log.txt", 'w');
 	fwrite($file_handle, date("[Y-m-d H:i:s: INFO]") . $message . "\n");
 	fclose($file_handle);
 }
 
 function log_error($message) {
-	$file_handle = fopen("log.txt", 'w');
+	$file_handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/log.txt", 'w');
 	fwrite($file_handle, date("[Y-m-d H:i:s: ERROR]") . $message . "\n");
+	fclose($file_handle);
+}
+
+function log_trace($message) {
+	global $verbose;
+	if(!$verbose) {
+		return;
+	}
+
+	$file_handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/log.txt", 'w');
+	fwrite($file_handle, date("[Y-m-d H:i:s: DEBUG]") . $message . "\n");
 	fclose($file_handle);
 }
 ?>

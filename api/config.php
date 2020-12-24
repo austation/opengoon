@@ -21,8 +21,8 @@ $servers = [
 	1 => ['ip' => "127.0.0.1", 'port' => 2337]
 ];
 
-
-
+// Verbose logging toggle. Toggles trace logs in the log.txt file. Turn this off in production environments (as if anyone would use this for a real server LMAO, Right?)
+$verbose = true;
 
 // This associated list pairs a mode with all the possible roundstart antags it can have. You probably shouldn't edit this.
 // If a key is not present, the mode has no roundstart antags
