@@ -12,9 +12,10 @@ okay, so if force is NOT specified, the API processes and then does a callback t
 
 response can also specify an error field to contain API errors. this error is handled in some places and not in others. goon code at work lol
 
-todo: ban sync, spin SQL queries out to functions once stuff is tested
+todo: spin SQL queries out to functions once stuff is tested
 OH FUCKKK notes uses a snowflake api system jesus christ
 okay cloud saves too
+okay, the ban panel also uses a snowflake api to pull in html
 
 Note: to get things working gooncode needs to be slightly modified to remove the / between the url and ? + params for stuff that queries this API.
 Note: ban parity api calls exist in the code, but they are never used. All ban handling is entirely remote.

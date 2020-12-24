@@ -11,7 +11,7 @@ if(!key_exists('auth', $_GET) || $_GET['auth'] !== md5($authKey) || !key_exists(
 	return;
 }
 
-if(!check_params(['ckey', 'ua', 'byondMajor', 'byondMinor'], $_GET)) {
+if(!check_params(['ckey', 'userAgent', 'byondMajor', 'byondMinor'], $_GET)) {
 	echo json_error("Malformed request to the API. Missing params.");
 	return;
 }
@@ -21,7 +21,7 @@ if(!sql_query("SELECT * FROM `player` WHERE `ckey` = ?", ['s', $_GET['ckey']])) 
 	return;
 }
 
-sql_query("UPDATE `player` SET `ua` = ?, `byond_major` = ?, `byond_minor` = ? WHERE `ckey` = ?", ['siis', $_GET['ua'], $_GET['byondMajor'], $_GET['byondMinor'], $_GET['ckey']]);
+sql_query("UPDATE `player` SET `ua` = ?, `byond_major` = ?, `byond_minor` = ? WHERE `ckey` = ?", ['siis', $_GET['userAgent'], $_GET['byondMajor'], $_GET['byondMinor'], $_GET['ckey']]);
 
 echo JSON_SUCCESS;
 

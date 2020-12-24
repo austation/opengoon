@@ -6,7 +6,7 @@ const JSON_SUCCESS = "{\"success\":true}"; // success value because I'm lazy af 
 // Make a callback to a server. Takes a server address, port and associative array of arguments to pass, along with a proc and optional datum to call
 function callback($addr, $port, $args, $proc, $datum = false) {
 	global $authKey;
-	$queryStr = "?auth=" . md5($authKey) . "&proc=" . $proc . ($datum !== false ? "&datum=" . $datum : "") . "&data=" . json_encode($args);
+	$queryStr = "?type=hubCallback&auth=" . md5($authKey) . "&proc=" . $proc . ($datum !== false ? "&datum=" . $datum : "") . "&data=" . json_encode($args);
 	$query = "\x00\x83" . pack('n', strlen($queryStr) + 6) . "\x00\x00\x00\x00\x00" . $queryStr . "\x00";
 
 	$server = socket_create(AF_INET, SOCK_STREAM, SOL_TCP) or exit("Could not create TCP socket");

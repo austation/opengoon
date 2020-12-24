@@ -28,9 +28,9 @@ if(!is_array($_GET['players']) && key_exists('role', $_GET)) {
 		}
 	} else { // row doesn't exist
 		if(key_exists('latejoin', $_GET)) { // late join antag
-			sql_query("INSERT INTO `antag` (`ckey`, `role`, `selected`, `ignored`, `seen`) VALUES (?, ?, 1, 0, 0) WHERE `ckey` = ? AND `role` = ?", ['ss', $_GET['player'], $_GET['role']]);
+			sql_query("INSERT INTO `antag` (`ckey`, `role`, `selected`, `ignored`, `seen`) VALUES (?, ?, 1, 0, 0)", ['ss', $_GET['player'], $_GET['role']]);
 		} else {
-			sql_query("INSERT INTO `antag` (`ckey`, `role`, `selected`, `ignored`, `seen`) VALUES (?, ?, 0, 1, 0) WHERE `ckey` = ? AND `role` = ?", ['ss', $_GET['player'], $_GET['role']]);
+			sql_query("INSERT INTO `antag` (`ckey`, `role`, `selected`, `ignored`, `seen`) VALUES (?, ?, 0, 1, 0)", ['ss', $_GET['player'], $_GET['role']]);
 		}
 	}
 // Deal with multiples
@@ -46,9 +46,9 @@ if(!is_array($_GET['players']) && key_exists('role', $_GET)) {
 			}
 		} else { // row doesn't exist
 			if(key_exists('assday', $_GET)) { // late join antag
-				sql_query("INSERT INTO `antag` (`ckey`, `role`, `selected`, `ignored`, `seen`) VALUES (?, ?, 1, 0, 0) WHERE `ckey` = ? AND `role` = ?", ['ss', $player['ckey'], $player['role']]);
+				sql_query("INSERT INTO `antag` (`ckey`, `role`, `selected`, `ignored`, `seen`) VALUES (?, ?, 1, 0, 0)", ['ss', $player['ckey'], $player['role']]);
 			} else {
-				sql_query("INSERT INTO `antag` (`ckey`, `role`, `selected`, `ignored`, `seen`) VALUES (?, ?, 0, 1, 0) WHERE `ckey` = ? AND `role` = ?", ['ss', $player['ckey'], $player['role']]);
+				sql_query("INSERT INTO `antag` (`ckey`, `role`, `selected`, `ignored`, `seen`) VALUES (?, ?, 0, 1, 0)", ['ss', $player['ckey'], $player['role']]);
 			}
 		}
 
