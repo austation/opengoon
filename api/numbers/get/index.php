@@ -30,14 +30,16 @@ flush();
 if(session_id()) session_write_close();
 
 // This API endpoint takes no params, just makes a callback. Let's generate our required output first...
-$numbers;
+$numbers = "";
 for($i = 0; $i <= 20; $i++) {
 	if($i == 20) {
-		$numbers += rand(0, 99);
+		$numbers .= rand(0, 99);
 	} else {
-		$numbers += rand(0, 99) . ' ';
+		$numbers .= rand(0, 99) . ' ';
 	}
 }
+
+log_trace("Numbers string generated value: " . $numbers);
 
 // Next, make a callback with the required data.
 callback($servers[$serverKey]['ip'], $servers[$serverKey]['port'], ['numbers' => $numbers], "lincolnshire_numbers");

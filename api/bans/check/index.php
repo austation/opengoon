@@ -32,7 +32,7 @@ if($_GET['record']) {
 	// IP - check row exists
 	if(!sql_query("SELECT * FROM `ip_history` WHERE `ip` = ? AND `ckey` = ?", ['is', ip_to_int($_GET['ip']), $_GET['ckey']])) {
 		// it doesn't, add one
-		sql_query("INSERT INTO `ip_history` VALUES (?, ?, 1)", ['si', $_GET['ckey'], ip_to_int($_GET['ip'])]);
+		sql_query("INSERT INTO `ip_history` (`ckey`, `ip`, `count`) VALUES (?, ?, 1)", ['si', $_GET['ckey'], ip_to_int($_GET['ip'])]);
 	} else {
 		// it does, update it
 		sql_query("UPDATE `ip_history` SET `count` = `count` + 1 WHERE `ckey` = ? AND `ip` = ?", ['si', $_GET['ckey'], ip_to_int($_GET['ip'])]);
@@ -41,7 +41,7 @@ if($_GET['record']) {
 	// compID
 	if(!sql_query("SELECT * FROM `compid_history` WHERE `compid` = ? AND `ckey` = ?", ['ss', $_GET['compID'], $_GET['ckey']])) {
 		// it doesn't, add one
-		sql_query("INSERT INTO `compid_history` VALUES (?, ?, 1)", ['ss', $_GET['ckey'], $_GET['compID']]);
+		sql_query("INSERT INTO `compid_history` (`ckey`, `compID`, `count`) VALUES (?, ?, 1)", ['ss', $_GET['ckey'], $_GET['compID']]);
 	} else {
 		// it does, update it
 		sql_query("UPDATE `compid_history` SET `count` = `count` + 1 WHERE `ckey` = ? AND `compid` = ?", ['ss', $_GET['ckey'], $_GET['compID']]);
@@ -50,7 +50,7 @@ if($_GET['record']) {
 
 // Now with all that connection stuff done, get the bans applicable to the server and build response
 $response = array();
-$bans = sql_query("SELECT * FROM `bans` WHERE (`ckey` = ? OR `ip` = ? OR `compID` = ?) AND (`server` = ? OR `server` IS NULL)", ['siss', $_GET['ckey'], ip_to_int($_GET['ip']), $_GET['compID'], $_GET['data_id']]);
+$bans = sql_query("SELECT * FROM `bans` WHERE (`ckey` = ? OR `ip` = ? OR `compID` = ?) AND (`server` = ? OR `server` IS NULL)", ['siss', $_GET['ckey'], ip_to_int($_GET['ip']), $_GET['compID'], $_GET['data_id']], true);
 if(!$bans) { // wow, no bans to speak of! you chad!
 	$response['none'] = true;
 } else { // you fucked up, there's bans on record lole
@@ -59,7 +59,7 @@ if(!$bans) { // wow, no bans to speak of! you chad!
 		$response[$row['id']] = [
 			'ckey' => $row['ckey'],
 			'ip' => int_to_ip($row['ip']),
-			'compID' => $row['compID'],
+			'compID' => $row['compid'],
 			'id' => $row['id'],
 			'previous' => $row['previous'],
 			'chain' => $row['chain'],

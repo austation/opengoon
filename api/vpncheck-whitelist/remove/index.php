@@ -16,7 +16,7 @@ if(!check_params(['ckey', 'akey'], $_GET)) {
 	return;
 }
 
-sql_query("DELETE FROM `vpn_whitelist` WHERE `ckey` = ?", ['ss', $_GET['ckey']]);
+sql_query("DELETE FROM `vpn_whitelist` WHERE `ckey` = ?", ['s', $_GET['ckey']]);
 
 echo JSON_SUCCESS;
 

@@ -21,7 +21,7 @@ if(!sql_query("SELECT * FROM `player` WHERE `ckey` = ?", ['s', $_GET['ckey']])) 
 	return;
 }
 
-sql_query("UPDATE `player` SET `ua` = ?, `byondMajor` = ?, `byondMinor` = ? WHERE `ckey` = ?", ['sii', $_GET[`ua`], $_GET['byondMajor'], $_GET['byondMinor'], $_GET['ckey']]);
+sql_query("UPDATE `player` SET `ua` = ?, `byond_major` = ?, `byond_minor` = ? WHERE `ckey` = ?", ['siis', $_GET['ua'], $_GET['byondMajor'], $_GET['byondMinor'], $_GET['ckey']]);
 
 echo JSON_SUCCESS;
 

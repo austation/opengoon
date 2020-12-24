@@ -36,7 +36,7 @@ if(session_id()) session_write_close();
 // handle server-specific
 $dbStatus;
 if(key_exists('server', $_GET)) {
-	$dbStatus = sql_query("INSERT INTO `bans` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
+	$dbStatus = sql_query("INSERT INTO `bans` (`ckey`, `ip`, `compid`, `reason`, `oakey`, `akey`, `timestamp`, `previous`, `chain`, `server`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
 		'sissssiiis',
 		$_GET['ckey'],
 		ip_to_int($_GET['ip']),
@@ -51,7 +51,7 @@ if(key_exists('server', $_GET)) {
 	], false, true);
 // handle global
 } else {
-	$dbStatus = sql_query("INSERT INTO `bans` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)", [
+	$dbStatus = sql_query("INSERT INTO `bans` (`ckey`, `ip`, `compid`, `reason`, `oakey`, `akey`, `timestamp`, `previous`, `chain`, `server`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)", [
 		'sissssiii',
 		$_GET['ckey'],
 		ip_to_int($_GET['ip']),

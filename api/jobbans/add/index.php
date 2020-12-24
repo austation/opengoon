@@ -25,9 +25,9 @@ if($rows) {
 
 // Now we can insert the ban into the DB
 if(empty($_GET['applicable_server'])) { // slightly different syntax if that's not set
-	sql_query("INSERT INTO `jobbans` VALUES (?, ?, ?, NULL)", ['sss', $_GET['ckey'], $_GET['rank'], $_GET['akey']]);
+	sql_query("INSERT INTO `jobbans` (`ckey`, `role`, `akey`, `server`) VALUES (?, ?, ?, NULL)", ['sss', $_GET['ckey'], $_GET['rank'], $_GET['akey']]);
 } else {
-	sql_query("INSERT INTO `jobbans` VALUES (?, ?, ?, ?)", ['ssss', $_GET['ckey'], $_GET['rank'], $_GET['akey'], $_GET['applicable_server']]);
+	sql_query("INSERT INTO `jobbans` (`ckey`, `role`, `akey`, `server`) VALUES (?, ?, ?, ?)", ['ssss', $_GET['ckey'], $_GET['rank'], $_GET['akey'], $_GET['applicable_server']]);
 }
 
 // we're done!

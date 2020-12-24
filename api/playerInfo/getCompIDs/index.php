@@ -23,7 +23,7 @@ if(!$player) {
 }
 $player = $player[0]; // sneaky simplification
 
-$cid_history = sql_query("SELECT * FROM `compid_history` WHERE `ckey` = ?", ['s', $_GET['ckey']]);
+$cid_history = sql_query("SELECT * FROM `compid_history` WHERE `ckey` = ?", ['s', $_GET['ckey']], true);
 
 $response = array();
 

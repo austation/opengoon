@@ -62,43 +62,41 @@ function callback($addr, $port, $args, $proc, $datum = false) {
 function sql_query($query, $params, $returnValues = false, $failSafe = false) {
 	global $databaseAddress, $databaseUser, $databasePassword, $databaseName;
 	$result = false;
-	$db = mysqli_connect($databaseAddress, $databaseUser, $databasePassword, $databaseName);
-	if(mysqli_connect_errno() && !$failSafe){
-		echo json_error("Couldn't connect to DB");
-		exit;
-	}
-	$stmt = $db->stmt_init();
-	$stmt->prepare($query);
-	call_user_func_array(array($stmt, 'bind_param'), ref_values($params)); // this is CHAD
+	mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+	// Only murder stuff if I ask for it
+	try {
+		$db = mysqli_connect($databaseAddress, $databaseUser, $databasePassword, $databaseName);
+		$stmt = $db->stmt_init();
+		$stmt->prepare($query);
+		call_user_func_array(array($stmt, 'bind_param'), ref_values($params)); // this is CHAD
 
-	if($stmt->execute()) {
-		if(!$returnValues || $stmt->affected_rows == 0) {
-			$result = $stmt->affected_rows;
-		} else {
-			$meta = $stmt->result_metadata();
-			$result = array();
-			$row = array();
-			while ( $field = $meta->fetch_field() ) {
-				$parameters[] = &$row[$field->name];
+		$stmt->execute();
+		// Weird juggling of row values
+		$stmt_result = $stmt->get_result();
+		if(!$returnValues || $stmt->affected_rows == 0 || $stmt_result->num_rows == 0) {
+			if($stmt->affected_rows != -1) {
+				$result = $stmt->affected_rows;
+			} elseif($stmt_result) {
+				$result = $stmt_result->num_rows;
 			}
-
-			call_user_func_array(array($stmt, 'bind_result'), ref_values($parameters));
-
-			while($stmt->fetch()) {
-				$i = array();
-				foreach($row as $key => $val) {
-					$i[$key] = $val;
-				}
-				$result[] = $i;
+		} else {
+			$result = array();
+			while($row = $stmt_result->fetch_assoc()) {
+				$result[] = $row;
 			}
 		}
-	} elseif(!$failSafe) {
-		echo json_error("Couldn't execute query");
+
+		$stmt->close();
+		$db->close();
+	} catch(mysqli_sql_exception $e) {
+		log_error($e->getMessage());
+		log_error($e->getTraceAsString());
+		if($failSafe) {
+			return false;
+		}
+		echo json_error("Database error: " . $e->getMessage());
 		exit;
 	}
-
-	$stmt->close();
-	$db->close();
 	return $result;
 }
 
@@ -115,13 +113,13 @@ function ref_values($arr){
 }
 
 function ip_to_int($ipStr) {
-	$arr = preg_split('/./', $ipStr);
-	return ($arr[0] * (256 ** 3)) + ($arr[1] * (256 ** 2)) + ($arr[2] * 256) + ($arr[3]);
+	$arr = preg_split('/\./', $ipStr);
+	return ((int)$arr[0] * (256 ** 3)) + ((int)$arr[1] * (256 ** 2)) + ((int)$arr[2] * 256) + ((int)$arr[3]);
 }
 
 function int_to_ip($ipInt) {
 	$one = $ipInt & 255;
-	$two = $ipInt & 65280 >> 8;
+	$two = ($ipInt & 65280) >> 8;
 	$three = ($ipInt & 16711680) >> 16;
 	$four = ($ipInt & 4278190080) >> 24;
 	return $four . '.' . $three . '.' . $two . '.' . $one;
@@ -143,14 +141,14 @@ function json_error($message) {
 
 // Simple logging functions
 function log_info($message) {
-	$file_handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/log.txt", 'w');
-	fwrite($file_handle, date("[Y-m-d H:i:s: INFO]") . $message . "\n");
+	$file_handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/log.txt", 'a');
+	fwrite($file_handle, date("[Y-m-d H:i:s") . ": INFO] " . $message . "\n");
 	fclose($file_handle);
 }
 
 function log_error($message) {
-	$file_handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/log.txt", 'w');
-	fwrite($file_handle, date("[Y-m-d H:i:s: ERROR]") . $message . "\n");
+	$file_handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/log.txt", 'a');
+	fwrite($file_handle, date("[Y-m-d H:i:s") . ": ERROR] " . $message . "\n");
 	fclose($file_handle);
 }
 
@@ -160,8 +158,8 @@ function log_trace($message) {
 		return;
 	}
 
-	$file_handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/log.txt", 'w');
-	fwrite($file_handle, date("[Y-m-d H:i:s: DEBUG]") . $message . "\n");
+	$file_handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/log.txt", 'a');
+	fwrite($file_handle, date("[Y-m-d H:i:s") . ": DEBUG] " . $message . "\n");
 	fclose($file_handle);
 }
 ?>

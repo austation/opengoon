@@ -32,9 +32,9 @@ $parser->parseUserAgentString($player['ua']);
 
 $response = [
 	'seen' => $player['connections'],
-	'participated' => $player['participated'],
-	'byondMajor' => $player['byondMajor'],
-	'byondMinor' => $player['byondMinor'],
+	'participated' => $player['participations'],
+	'byondMajor' => $player['byond_major'],
+	'byondMinor' => $player['byond_minor'],
 	'platform' => $parser->osname,
 	'browser' => $parser->browsername,
 	'browserVersion' => $parser->browserversion,

@@ -34,7 +34,7 @@ if(session_id()) session_write_close();
 
 // Vars for error checking
 $dbStatus;
-$error;
+$error = false;
 
 // If we're deleting an evasion ban, follow the IDs back and we'll delete each of them.
 $ids = array();

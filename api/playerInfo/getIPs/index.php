@@ -23,7 +23,7 @@ if(!$player) {
 }
 $player = $player[0]; // sneaky simplification
 
-$ip_history = sql_query("SELECT * FROM `ip_history` WHERE `ckey` = ?", ['s', $_GET['ckey']]);
+$ip_history = sql_query("SELECT * FROM `ip_history` WHERE `ckey` = ?", ['s', $_GET['ckey']], true);
 
 $response = array();
 

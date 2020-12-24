@@ -32,14 +32,14 @@ ob_flush();
 flush();
 if(session_id()) session_write_close();
 
-$result = sql_query("SELECT `amount` FROM `gauntlet` WHERE `ckey` = ?", ['s', "INSERT INTO `gauntlet` VALUES (?, 1)"]);
+$result = sql_query("SELECT `amount` FROM `gauntlet` WHERE `ckey` = ?", ['s', $_GET['key']], true);
 
 if($result) {
-	sql_query("UPDATE `gauntlet` SET `amount` = `amount` + 1 WHERE `ckey` = ?", ['is', $_GET['key']]);
+	sql_query("UPDATE `gauntlet` SET `amount` = `amount` + 1 WHERE `ckey` = ?", ['s', $_GET['key']]);
 } else {
 	sql_query("INSERT INTO `gauntlet` VALUES (?, 1)", ['s', $_GET['key']]);
 }
 
-$result = ['keys' => [$_GET['key']], $_GET['key'] => $result[0]['amount']]; // format result
+$result = ['keys' => [$_GET['key']], $_GET['key'] => $result[0]['amount'] ?  $result[0]['amount'] : 0]; // format result
 callback($servers[$serverKey]['ip'], $servers[$serverKey]['port'], $result, "queryGauntletMatches");
 ?>

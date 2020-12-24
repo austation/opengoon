@@ -11,29 +11,19 @@ if(!key_exists('auth', $_GET) || $_GET['auth'] !== md5($authKey) || !key_exists(
 	return;
 }
 
-$updated = false;
+if(!check_params(['ckeys'], $_GET)) {
+	echo json_error("Malformed request to the API. Missing params.");
+	return;
+}
 
-// This encoding SUCKS!
-foreach($_GET as $key => $value) {
-	if(!preg_match('/ckeys/', $key)) {
-		continue;
-	}
-
-	$split = preg_split('/[\[\]]/', $key); // WHYYYY
-	$ckey = $split[1];
-
-	$response = sql_query("SELECT `playtime` FROM `player` WHERE `ckey` = ?", ['s', $ckey], true);
+foreach($_GET['ckeys'] as $key => $value) {
+	$response = sql_query("SELECT * FROM `player` WHERE `ckey` = ?", ['s', $key], true);
 
 	$newTime = (int)$value + (int)$response[0]['playtime'];
 
-	sql_query("UPDATE `player` SET `playtime` = ? WHERE `ckey` = ?", ['is', $newTime, $ckey]);
+	sql_query("UPDATE `player` SET `playtime` = ? WHERE `ckey` = ?", ['is', $newTime, $key]);
 
 	$updated = true;
-}
-
-if(!$updated) {
-	echo json_error("No ckeys and playtimes specified.");
-	return;
 }
 
 echo JSON_SUCCESS;

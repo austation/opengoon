@@ -34,7 +34,7 @@ if(session_id()) session_write_close();
 
 // Vars for error checking
 $dbStatus;
-$error;
+$error = false;
 
 // Check if the ban exists or not
 $dbStatus = sql_query("SELECT * FROM `bans` WHERE `id` = ?", ['i', $_GET['id']], false, true);

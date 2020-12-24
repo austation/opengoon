@@ -7,18 +7,18 @@ $authKey = "auth_key";
 // Address used to access the database. SQL file for easy setup included.
 $databaseAddress = "127.0.0.1";
 // DB username
-$databaseUser = "root";
+$databaseUser = "opengoon";
 // DB pass
-$databasePassword = "root";
+$databasePassword = "opengoon";
 // DB name
-$databaseName = "goonhub";
+$databaseName = "opengoon-api";
 
 // VPN Checker Auth Key - Set to "none" to disable VPN checking and return all IPs as safe. Service used is ipinfo.io
 $vpnAuth = "none";
 
 // Assoc list of servers and their IP + port, tied to an ID
 $servers = [
-	1 => ['ip' => "127.0.0.1", 'port' => 2337]
+	1 => ['ip' => "127.0.0.1", 'port' => 4975]
 ];
 
 // Verbose logging toggle. Toggles trace logs in the log.txt file. Turn this off in production environments (as if anyone would use this for a real server LMAO, Right?)
