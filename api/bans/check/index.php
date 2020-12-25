@@ -50,7 +50,7 @@ if($_GET['record']) {
 
 // Now with all that connection stuff done, get the bans applicable to the server and build response
 $response = array();
-$bans = sql_query("SELECT * FROM `bans` WHERE (`ckey` = ? OR `ip` = ? OR `compID` = ?) AND (`server` = ? OR `server` IS NULL)", ['siss', $_GET['ckey'], ip_to_int($_GET['ip']), $_GET['compID'], $_GET['data_id']], true);
+$bans = sql_query("SELECT * FROM `bans` WHERE (`ckey` = ? OR `ip` = ? OR `compID` = ?) AND (`server` = ? OR `server` IS NULL) ORDER BY `id` DESC", ['siss', $_GET['ckey'], ip_to_int($_GET['ip']), $_GET['compID'], $_GET['data_id']], true);
 if(!$bans) { // wow, no bans to speak of! you chad!
 	$response['none'] = true;
 } else { // you fucked up, there's bans on record lole

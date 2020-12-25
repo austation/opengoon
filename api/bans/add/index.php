@@ -78,7 +78,7 @@ if($dbStatus === false) { // DB broke, return an error.
 		'reason' => $_GET['reason'],
 		'oakay' => $_GET['oakey'],
 		'akey' => $_GET['akey'],
-		'timestamp' => $_GET['timestamp'],
+		'timestamp' => (int)$_GET['timestamp'],
 		'previous' => $_GET['previous'],
 		'chain' => $_GET['chain']
 	]];

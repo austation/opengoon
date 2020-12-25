@@ -82,7 +82,7 @@ if($error) {
 		'compID' => $_GET['compID'],
 		'reason' => $_GET['reason'],
 		'akey' => $_GET['akey'],
-		'timestamp' => $_GET['timestamp'],
+		'timestamp' => (int)$_GET['timestamp'],
 	]];
 	if(key_exists('server', $_GET)) {
 		$response['ban']['server'] = $_GET['server'];
