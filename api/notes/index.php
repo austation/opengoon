@@ -1,7 +1,7 @@
 <?php
 // Boilerplate Request Validation and Includes Code
-require '../../config.php';
-require '../../utils.php';
+require '../config.php';
+require '../utils.php';
 
 // This returns plaintext, containing some HTML tags the server interprets.
 header("Content-Type: text/plain");
