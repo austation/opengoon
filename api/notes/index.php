@@ -46,7 +46,7 @@ if($_GET['action'] == "get") {
 	}
 
 	// Insert into the DB
-	sql_query("INSERT INTO `notes` (`ckey`, `akey`, `server`, `note`) VALUES (?, ?, ?, ?)", ['ssss', $_GET['ckey'], $_GET['akey'], $_GET['server_id'], $_GET['notes']]);
+	sql_query("INSERT INTO `notes` (`ckey`, `akey`, `server`, `note`) VALUES (?, ?, ?, ?)", ['ssss', $_GET['ckey'], $_GET['akey'], $_GET['server_id'], $_GET['note']]);
 
 	// Echo something out so an error doesn't trip
 	echo "Success";
