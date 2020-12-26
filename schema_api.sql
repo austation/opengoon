@@ -101,5 +101,6 @@ CREATE TABLE IF NOT EXISTS `notes` (
 	`akey` VARCHAR(32) NOT NULL,
 	`server` VARCHAR(32) NOT NULL,
 	`note` VARCHAR(512) NOT NULL,
+	`timestamp` DATETIME NOT NULL DEFAULT NOW(), -- bans and stuff don't have this, but I thought it'd be useful to show times notes were added.
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

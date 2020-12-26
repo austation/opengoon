@@ -36,7 +36,7 @@ if($_GET['action'] == "get") {
 	// Now iterate through and print each one out
 	foreach($result as $row) {
 		// Echo it out with some fancy formatting
-		printf("<b>Admin:</b> %s <b>Server:</b> %s <b>Note:</b> %s !!ID%s\n", $row['akey'], $row['server'], $row['note'], $row['id']);
+		printf("<b>Timestamp:</b> %s <b>Admin:</b> %s <b>Server:</b> %s <b>Note:</b> %s !!ID%s\n", $row['timestamp'], $row['akey'], $row['server'], $row['note'], $row['id']);
 	}
 } elseif($_GET['action'] == "add") {
 	// Check required params exist
