@@ -6,13 +6,13 @@ require '../utils.php';
 // This returns plaintext, containing some HTML tags the server interprets.
 header("Content-Type: text/plain");
 
-// Whew that's a lot of checks for authentication, including IP, auth key and checking the server key
-if(!key_exists('auth', $_GET) || $_GET['auth'] !== md5($authKey) || !key_exists('server', $_GET) || !key_exists((int)$_GET['server'], $servers) || $servers[$_GET['server']]['ip'] !== $_SERVER['REMOTE_ADDR']) {
+// Check auth key. I can't check the IP address since there is no server id passed in.
+if(!key_exists('auth', $_GET) || $_GET['auth'] !== md5($authKey)) {
 	http_response_code(401);
 	return;
 }
 
-if(!check_params(['auth', 'action'], $_GET)) {
+if(!check_params(['action'], $_GET)) {
 	http_response_code(400);
 	return;
 }
