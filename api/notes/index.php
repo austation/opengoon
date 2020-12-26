@@ -30,7 +30,7 @@ if($_GET['action'] == "get") {
 
 	// Nothing found, return early
 	if(!$result) {
-		return;
+		echo "<b>No Notes Found</b>";
 	}
 
 	// Now iterate through and print each one out
