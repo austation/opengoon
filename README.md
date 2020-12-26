@@ -16,4 +16,4 @@ Because it's PHP, usage is braindead simple, as long as you have a DB setup.
 Currently, there are a few issues I'm aware of. Firstly, VPN checks don't work quite now but I was finishing the rest of the API and haven't looked into it just yet, because it's low priority. Second, the ban panel doesn't work quite yet because I didn't find it until late in development, since it uses a hardcoded API address and is written in JS. Also it has terrible logging because I wanted to announce this for internet points, I will polish this very soon, once I get all features in.
 
 # Disclaimer
-I wrote this API out of a moderate amount of salt about bee making theirs closed source. I don't yet know how well this will hold up in production, but I will probably run an austation goon server at some point to test things out and finally experience low ping gooncode.
+I wrote this API out of desire to write my own, since bee is making theirs closed source until some time next year at least. I don't yet know how well this will hold up in production, but I will probably run an austation goon server at some point to test things out and finally experience low ping gooncode.
