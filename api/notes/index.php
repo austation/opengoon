@@ -7,7 +7,7 @@ require '../utils.php';
 header("Content-Type: text/plain");
 
 // Whew that's a lot of checks for authentication, including IP, auth key and checking the server key
-if(!key_exists('auth', $_GET) || $_GET['auth'] !== md5($authKey) || !key_exists('data_server', $_GET) || !key_exists((int)$_GET['data_server'], $servers) || $servers[$_GET['data_server']]['ip'] !== $_SERVER['REMOTE_ADDR']) {
+if(!key_exists('auth', $_GET) || $_GET['auth'] !== md5($authKey) || !key_exists('server', $_GET) || !key_exists((int)$_GET['server'], $servers) || $servers[$_GET['server']]['ip'] !== $_SERVER['REMOTE_ADDR']) {
 	http_response_code(401);
 	return;
 }
