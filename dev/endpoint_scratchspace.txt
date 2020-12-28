@@ -1,0 +1,74 @@
+api endpoint: bans/get
+
+params:
+search[<column value>]=<search term (text)> - search type and term
+&sort=<sort value> - how to sort results
+&order=asc(ascending) OR desc (descending) - going up or down fam
+&offset=some number - offset to start entries at, depending on that page. mostly transparent, as in I just pass to DB without caring where it comes from or what it is
+&limit=some number - number of entries to retrieve, mostly some as above
+&removed= 1 or 0 (true false) - whether to show removed bans or active bans
+&forcejson=1 - lolwut what else would I return lmaoo
+&bypass=1 - skip callback, standard api, can ignore
+&auth=auth key md5 probably - standard api
+&data_id= - standard
+$data_server= - standard
+&data_version= - standard
+&t=some number - some random number? wtf? why would I ever use this lol. maybe to tell a request apart idk man
+
+column search values (what to search for? haven't worked that out yet lol):
+	all
+	ckey
+	akey
+	reason
+	compID
+	ip
+
+possible sort values (probably just passed to the SQL)
+	ckey
+	akey
+	reason
+	compID
+	ip
+
+
+response:
+{
+	"total": number of bans in total selected, NOT just on the one page,
+	1: {
+		"id": ban id,
+		"ckey": player ckey,
+		"compID": player compID,
+		"ip": player ip, string format,
+		"reason": ban reason,
+		"timestamp": unban timestamp,
+		"akey": banning admin key,
+		"oakey": original banning admin key,
+		"previous": id of previous ban, if this is an evasion ban,
+		"chain": number of times banned for evasion,
+		"server": present if the ban is server specific
+	},
+	2: {
+		"id": ban id,
+		"ckey": player ckey,
+		"compID": player compID,
+		"ip": player ip, string format,
+		"reason": ban reason,
+		"timestamp": unban timestamp,
+		"akey": banning admin key,
+		"oakey": original banning admin key,
+		"previous": id of previous ban, if this is an evasion ban,
+		"chain": number of times banned for evasion,
+		"server": present if the ban is server specific
+	}
+}
+
+
+api endpoint: bans/getPrevious
+
+params:
+all standard stuff from the above endpoint other than
+id=some number - id of the ban to search
+
+response:
+actually identical to bans/get
+the difference is that it gets the previous evasion bans for a specified ID. In my implementation I will include the ban to check as well.

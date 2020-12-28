@@ -43,7 +43,7 @@ $curId = $_GET['id'];
 
 // Infinite loop. We'll break out when we can't find any more bans
 while(true) {
-	$dbStatus = sql_query("SELECT * FROM `bans` WHERE `id` = ?", ['i', $curId], true, true);
+	$dbStatus = sql_query("SELECT * FROM `bans` WHERE `removed` = FALSE AND `id` = ?", ['i', $curId], true, true);
 	if($dbStatus === 0) {
 		// couldn't find a matching ban for that ID. If it's the id we were given, error out, else we have all the IDs we can get
 		if($curId == $_GET['id']) {
@@ -71,7 +71,7 @@ while(true) {
 // Now we should have a full list of every ban to remove. Loop over them and run a deletion query.
 if(!$error) {
 	foreach($ids as $id) {
-		$dbStatus = sql_query("DELETE FROM `bans` WHERE `id` = ?", ['i', $id]);
+		$dbStatus = sql_query("UPDATE `bans` SET `removed` = TRUE WHERE `id` = ?", ['i', $id]);
 		if($dbStatus === false) {
 			$error = "Failed to delete ban id {$id} from the DB. Aborting.";
 			break;
