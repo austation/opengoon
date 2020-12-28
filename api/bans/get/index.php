@@ -102,7 +102,7 @@ foreach($rows as $row) {
 		'akey' => $row['akey'],
 		'oakey' => $row['oakey'],
 		'previous' => $row['previous'],
-		'chain' => $row['chain'],
+		'chain' => $row['chain']
 	];
 
 	if($row['server']) {
