@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `bans` (
 	`previous` INT UNSIGNED NOT NULL DEFAULT '0',
 	`chain` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
 	`server` VARCHAR(32) DEFAULT NULL,
-	`removed` BOOLEAN NOT NULL DEFAULT 'FALSE', -- tbh, we shouldn't just nuke bans from the face of the earth, because that's what I did. let's keep them around for admins to look at
+	`removed` BOOLEAN NOT NULL DEFAULT FALSE, -- tbh, we shouldn't just nuke bans from the face of the earth, because that's what I did. let's keep them around for admins to look at
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

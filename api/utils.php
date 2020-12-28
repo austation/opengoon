@@ -100,6 +100,16 @@ function sql_query($query, $params, $returnValues = false, $failSafe = false) {
 	return $result;
 }
 
+// Connects to the DB and escapes a string for (probably) safe use.
+function sql_escape($str) {
+	global $databaseAddress, $databaseUser, $databasePassword, $databaseName;
+	mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+	$db = mysqli_connect($databaseAddress, $databaseUser, $databasePassword, $databaseName);
+	$out = $db->real_escape_string($str);
+	$db->close();
+	return $out;
+}
+
 // Referenceize arrays for arg passing
 function ref_values($arr){
 	if (strnatcmp(phpversion(),'5.3') >= 0) //Reference is required for PHP 5.3+
@@ -113,11 +123,25 @@ function ref_values($arr){
 }
 
 function ip_to_int($ipStr) {
+	if($ipStr == "N/A") {
+		return 0;
+	}
 	$arr = preg_split('/\./', $ipStr);
+	if(count($arr) != 4) {
+		return -1;
+	}
+	foreach($arr as $val) {
+		if(!is_numeric($val)) {
+			return -1;
+		}
+	}
 	return ((int)$arr[0] * (256 ** 3)) + ((int)$arr[1] * (256 ** 2)) + ((int)$arr[2] * 256) + ((int)$arr[3]);
 }
 
 function int_to_ip($ipInt) {
+	if($ipInt == 0) {
+		return "N/A";
+	}
 	$one = $ipInt & 255;
 	$two = ($ipInt & 65280) >> 8;
 	$three = ($ipInt & 16711680) >> 16;
