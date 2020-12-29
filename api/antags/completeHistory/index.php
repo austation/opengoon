@@ -17,7 +17,7 @@ if(!check_params(['player'], $_GET)) { // I'm so god tier smart that I don't eve
 }
 
 // Get their history from the DB
-$result = sql_query("SELECT * FROM `antag` WHERE `ckey` = ?", ['s', $_GET['ckey']], true);
+$result = sql_query("SELECT * FROM `antag` WHERE `ckey` = ?", ['s', $_GET['player']], true);
 
 // Parse each entry and start building our response
 $response = ['history' => array()];
