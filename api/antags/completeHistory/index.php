@@ -11,7 +11,7 @@ if(!key_exists('auth', $_GET) || $_GET['auth'] !== md5($authKey) || !key_exists(
 	return;
 }
 
-if(!check_params(['ckey'], $_GET)) { // I'm so god tier smart that I don't even need the mode anymore, but still make sure it's there for correctness
+if(!check_params(['player'], $_GET)) { // I'm so god tier smart that I don't even need the mode anymore, but still make sure it's there for correctness
 	echo json_error("Malformed request to the API. Missing params.");
 	return;
 }
