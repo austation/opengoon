@@ -23,8 +23,8 @@ foreach($_GET['players'] as $ckey) {
 	$seen = 0;
 	$result = sql_query("SELECT * FROM `antag` WHERE `ckey` = ? AND `role` = ?", ['ss', $ckey, $_GET['role']], true);
 	if($result) {// they have antag rounds rounds on record for this mode and role
-		$selected = max($result[0]['selected'];
-		$seen = $result[0]['seen'] - $result[0]['ignored'], 0); // because I'm a chad, unlike some people I account for ass day.
+		$selected = $result[0]['selected'];
+		$seen = max($result[0]['seen'] - $result[0]['ignored'], 0); // because I'm a chad, unlike some people I account for ass day.
 	}
 
 	// We have the data now, we can create an entry in the response data.
