@@ -20,7 +20,7 @@ These changes are not reflected on the goonstation CDN, so if you want all inter
 I scraped the files from goon's CDN, but for ethical and copyright purposes I won't be hosting them here. If you're interested, shoot me a DM on Discord (Terra#4852) and I can send you a copy of the files if needed.
 Suffice it to say, you'll want to run the server through cloudflare or a similar service to decrease origin load.
 
-Also note, the CDN address is actually hardcoded into the server in a few spots. You'll need to change the address to match yours. You can see an example on austation's goon fork [https://github.com/austation/goonstation/commit/77c1b4b58878c09c0c98c9a2bfd09eea37baba33](here).
+Also note, the CDN address is actually hardcoded into the server in a few spots. You'll need to change the address to match yours. You can see an example on austation's goon fork [here](https://github.com/austation/goonstation/commit/77c1b4b58878c09c0c98c9a2bfd09eea37baba33).
 
 # Known Issues
 Currently, there are a few issues I'm aware of. Firstly, VPN checks don't work quite now but I was finishing the rest of the API and haven't looked into it just yet, because it's low priority. Also it has terrible logging because I wanted to announce this for internet points, I will polish this very soon, once I get all features in. Also I need to add cloud saves.
