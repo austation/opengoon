@@ -11,13 +11,13 @@ if(!key_exists('auth', $_GET) || $_GET['auth'] !== md5($authKey) || !key_exists(
 	return;
 }
 
-if(!check_params(['ckey'], $_GET)) { // I'm so god tier smart that I don't even need the mode anymore, but still make sure it's there for correctness
+if(!check_params(['player'], $_GET)) { // I'm so god tier smart that I don't even need the mode anymore, but still make sure it's there for correctness
 	echo json_error("Malformed request to the API. Missing params.");
 	return;
 }
 
 // Get their history from the DB
-$result = sql_query("SELECT * FROM `antag` WHERE `ckey` = ?", ['s', $_GET['ckey']], true);
+$result = sql_query("SELECT * FROM `antag` WHERE `ckey` = ?", ['s', $_GET['player']], true);
 
 // Parse each entry and start building our response
 $response = ['history' => array()];
