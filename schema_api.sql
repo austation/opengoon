@@ -1,4 +1,4 @@
--- OpenGoon API SQL Schema v1 --
+-- OpenGoon API SQL Schema v1.1 --
 
 DROP TABLE IF EXISTS `player`;
 CREATE TABLE IF NOT EXISTS `player` (
@@ -12,6 +12,24 @@ CREATE TABLE IF NOT EXISTS `player` (
 	`participations` SMALLINT UNSIGNED NOT NULL DEFAULT '0',
 	`playtime` INT UNSIGNED NOT NULL DEFAULT '0',
 	PRIMARY KEY (`ckey`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `cloudsaves`;
+CREATE TABLE IF NOT EXISTS `cloudsaves` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`ckey` VARCHAR(32) NOT NULL,
+	`name` VARCHAR(32) NOT NULL,
+	`data` VARCHAR(10240), -- expect about 10KiB of savefile data. A savefile with one profile is about 2KiB as text, so extrapolating we can expect 6-7KiB for one with 3. This gives a good margin.
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `persistent`;
+CREATE TABLE IF NOT EXISTS `persistent` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`ckey` VARCHAR(32) NOT NULL,
+	`key` VARCHAR(32) NOT NULL,
+	`value` VARCHAR(32) NOT NULL,
+	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `ip_history`;
@@ -31,17 +49,6 @@ CREATE TABLE IF NOT EXISTS `compid_history` (
 	`count` SMALLINT UNSIGNED NOT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- Commented out for now, will probably remove completely, depending.
--- DROP TABLE IF EXISTS `participation`;
--- CREATE TABLE IF NOT EXISTS `participation` (
--- 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
--- 	`ckey` VARCHAR(32) NOT NULL,
--- 	`mode` VARCHAR(32) NOT NULL,
--- 	`seen` SMALLINT UNSIGNED NOT NULL,
--- 	`seen_total` SMALLINT UNSIGNED NOT NULL,
--- 	PRIMARY KEY (`id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `antag`;
 CREATE TABLE IF NOT EXISTS `antag` (

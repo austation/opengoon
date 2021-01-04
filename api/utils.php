@@ -1,7 +1,7 @@
 <?php
 require 'config.php';
 
-const JSON_SUCCESS = "{\"success\":true}"; // success value because I'm lazy af and don't wanna type it. We just use this to add a small body to requests with no return, so the server doesn't die.
+const JSON_SUCCESS = "{\"status\":\"OK\"}"; // success value because I'm lazy af and don't wanna type it. We just use this to add a small body to requests with no return, so the server doesn't die.
 
 // Make a callback to a server. Takes a server address, port and associative array of arguments to pass, along with a proc and optional datum to call
 function callback($addr, $port, $args, $proc, $datum = false) {
@@ -160,7 +160,7 @@ function check_params($keys, $assocList) {
 
 // Gets a simple JSON error string for the API.
 function json_error($message) {
-	return json_encode(['error' => $message]);
+	return json_encode(['status' => 'error', 'error' => $message]);
 }
 
 // Simple logging functions
