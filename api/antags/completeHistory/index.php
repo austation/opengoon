@@ -20,8 +20,10 @@ $result = sql_query("SELECT * FROM `antag` WHERE `ckey` = ?", ['s', $_GET['playe
 
 // Parse each entry and start building our response
 $response = ['history' => array()];
-foreach($result as $row) {
-	$response['history'][$row['role']] = ['selected' => $row['selected'], 'seen' => $row['seen'], 'percent' => round(($row['selected'] / $row['seen']) * 100)];
+if($response) {
+	foreach($result as $row) {
+		$response['history'][$row['role']] = ['selected' => $row['selected'], 'seen' => $row['seen'], 'percent' => round(($row['selected'] / $row['seen']) * 100)];
+	}
 }
 
 echo json_encode($response);

@@ -160,7 +160,7 @@ function check_params($keys, $assocList) {
 
 // Authentication check function. Takes some self-explanatory settings. Note, checks $_GET global for values.
 function check_auth($checkVesion = true, $customAuthKey = false, $iterateIps = false) {
-	global $authKey, $servers, $authentication;
+	global $authKey, $servers, $authentication, $apiVersion;
 	// Debug check - Don't abuse for god sake!
 	if(!$authentication) {
 		return true;
@@ -169,10 +169,12 @@ function check_auth($checkVesion = true, $customAuthKey = false, $iterateIps = f
 	// Auth key checks
 	if($customAuthKey && key_exists($customAuthKey, $_GET)) {
 		if($_GET[$customAuthKey] !== md5($authKey)) {
+			log_error("Auth failed, custom key {$customAuthKey} with param value {$_GET[$customAuthKey]}");
 			return false;
 		}
 	} elseif(key_exists('auth', $_GET)) {
 		if($_GET['auth'] !== md5($authKey)) {
+			log_error("Auth failed with param value {$_GET['auth']}");
 			return false;
 		}
 	} else {
@@ -189,10 +191,12 @@ function check_auth($checkVesion = true, $customAuthKey = false, $iterateIps = f
 			}
 		}
 		if(!$valid) {
+			log_error("Unauthorized IP address tried to use API, with IP {$_SERVER['REMOTE_ADDR']}");
 			return false;
 		}
 	} elseif(key_exists('data_server', $_GET) && key_exists($_GET['data_server'], $servers)) {
 		if($servers[$_GET['data_server']]['ip'] !== $_SERVER['REMOTE_ADDR']) {
+			log_error("Unauthorized IP address tried to use API, with IP {$_SERVER['REMOTE_ADDR']}");
 			return false;
 		}
 	} else {
@@ -201,7 +205,8 @@ function check_auth($checkVesion = true, $customAuthKey = false, $iterateIps = f
 
 	// Optional version checks (compatibility)
 	if($checkVesion) {
-		if($_GET['data_version'] != API_VERSION) {
+		if($_GET['data_version'] != $apiVersion) {
+			log_error("Server using invalid API version tried to use API, with target version {$_GET['data_version']}");
 			return false;
 		}
 	}
