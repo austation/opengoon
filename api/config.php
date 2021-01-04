@@ -1,6 +1,9 @@
 <?php
 // This file is for configuration options for the API. Included by all other files that handle requests.
 
+// Current API Version - Simple Constant
+const API_VERSION = 1;
+
 // Key used to authenticate communications between the BYOND server and the API. Keep this secure.
 $authKey = "auth_key";
 
@@ -23,6 +26,9 @@ $servers = [
 
 // Verbose logging toggle. Toggles trace logs in the log.txt file. Turn this off in production environments (as if anyone would use this for a real server LMAO, Right?)
 $verbose = true;
+
+// Authentication Toggle - DEBUG ONLY, KEEP ENABLED ON PRODUCTION SERVERS!!!
+$authentication = true;
 
 // This associated list pairs a mode with all the possible roundstart antags it can have. You probably shouldn't edit this.
 // If a key is not present, the mode has no roundstart antags

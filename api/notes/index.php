@@ -6,22 +6,7 @@ require '../utils.php';
 // This returns plaintext, containing some HTML tags the server interprets.
 header("Content-Type: text/plain");
 
-// Check auth key. I can't check the IP address since there is no server id passed in.
-if(!key_exists('auth', $_GET) || $_GET['auth'] !== md5($authKey)) {
-	http_response_code(401);
-	return;
-}
-
-// Because the server doesn't give us an ID we can use as a handle to retrieve the expected IP
-// We'll just loop through the list of servers and find one that matches
-$valid = false;
-foreach($servers as $key => $value) {
-	if($value['ip'] === $_SERVER['REMOTE_ADDR']) {
-		// found the IP
-		$valid = true;
-	}
-}
-if(!$valid) {
+if(!check_auth(false, false, true)) {
 	http_response_code(401);
 	return;
 }
