@@ -19,10 +19,23 @@ $databaseName = "opengoon-api";
 // VPN Checker Auth Key - Set to "none" to disable VPN checking and return all IPs as safe. Service used is ipinfo.io
 $vpnAuth = "none";
 
-// Assoc list of servers and their IP + port, tied to an ID
+// Assoc list of servers and their IP + port + (optional tgs instance ID for map switching.), tied to an ID
 $servers = [
-	1 => ['ip' => "127.0.0.1", 'port' => 4975]
+	1 => ['ip' => "127.0.0.1", 'port' => 4975, 'instance' => null]
 ];
+
+// URL that the TGS API lives at. Used for the map switcher to recompile a map. Uses the latest TGS API spec. (I'll try to keep this up to date.) Set to "none" to disable the map switcher.
+// Needs *ONE* trailing /
+$tgsUrl = "none";
+
+// TGS Username
+$tgsUser = "Admin";
+
+// TGS Pass
+$tgsPass = "Admin";
+
+// TGS API Version - Check if code changes are needed before changing
+$tgsApiVersion = "Tgstation.Server.Api/8.1.2";
 
 // Verbose logging toggle. Toggles trace logs in the log.txt file. Turn this off in production environments (as if anyone would use this for a real server LMAO, Right?)
 $verbose = true;
