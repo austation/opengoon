@@ -2,7 +2,7 @@
 // This file is for configuration options for the API. Included by all other files that handle requests.
 
 // Current API Version - Simple Constant
-const API_VERSION = 1;
+const API_VERSION = 1.2;
 
 // Key used to authenticate communications between the BYOND server and the API. Keep this secure.
 $authKey = "auth_key";
