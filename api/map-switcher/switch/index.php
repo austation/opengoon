@@ -156,7 +156,7 @@ if(!$response) {
 // Holy moly, finally got here. All done. Just return the right status code and we're okay, hopefully.
 // Tell the server everything's good. TGS will callback to the map switcher when compilation finishes.
 http_response_code(201);
-$return = ['response' => 201];
+$return = ['response' => "201"];
 echo json_encode($return);
 
 ?>
