@@ -25,15 +25,17 @@ if($tgsUrl === "none" || is_null($servers[$_GET['data_server']]['instance'])) {
 // First we'll need to authenticate and get our JWT token.
 
 // Set our user agent so TGS knows we're not a browser...
-ini_set('user_agent', "opengoon-api / {$apiVersion}");
+ini_set('user_agent', "opengoon-api");
 
 // Build a stream with the headers we need
 $auth = base64_encode("{$tgsUser}:{$tgsPass}");
 $instance = $servers[$_GET['data_server']]['instance'];
 $options = [
 	'http' => [
-		'method' => 'GET',
+		'method' => 'POST',
 		'header' => "Api: {$tgsApiVersion}\r\n" .
+			"Accept: application/json\r\n" .
+			"Content-Length: 0\r\n" .
 			"Authorization: Basic {$auth}\r\n"
 	]
 ];
@@ -48,7 +50,7 @@ if(!$response) {
 }
 
 // All going well we have our token, so
-$response = json_decode($response);
+$response = json_decode($response, true);
 $bearer = $response['bearer'];
 
 // Update our context accordingly
@@ -56,7 +58,8 @@ $options = [
 	'http' => [
 		'method' => 'GET',
 		'header' => "Api: {$tgsApiVersion}\r\n" .
-			"Authorization: Bearer {$bearers}\r\n" .
+			"Accept: application/json\r\n" .
+			"Authorization: Bearer {$bearer}\r\n" .
 			"Instance: {$instance}"
 	]
 ];
@@ -69,20 +72,25 @@ $fileHash = null;
 $response = file_get_contents($tgsUrl . "Config/File/CodeModifications/_std/__map.dm", false, $context);
 if($response) {
 	// File exists
-	$response = json_decode($response);
+	$response = json_decode($response, true);
 	$fileHash = $response['lastReadHash'];
 }
 
 // We have the file's previous hash now. We can send a request for a file ticket to write to it...
 // Update our context accordingly
 $content = ['path' => '/CodeModifications/_std/__map.dm', 'accessDenied' => null, 'isDirectory' => null, 'lastReadHash' => $fileHash];
+$content = json_encode($content);
+$contentLen = strlen($content);
 $options = [
 	'http' => [
 		'method' => 'POST',
 		'header' => "Api: {$tgsApiVersion}\r\n" .
-			"Authorization: Bearer {$bearers}\r\n" .
+			"Accept: application/json\r\n" .
+			"Content-Type: application/json\r\n" .
+			"Content-Length: {$contentLen}\r\n" .
+			"Authorization: Bearer {$bearer}\r\n" .
 			"Instance: {$instance}",
-		'content' => json_encode($content)
+		'content' => $content
 	]
 ];
 
@@ -96,18 +104,22 @@ if(!$response) {
 }
 
 // We should have a file ticket to write with now. Let's grab that.
-$response = json_decode($response);
+$response = json_decode($response, true);
 $fileTicket = urlencode($response['fileTicket']);
 
 // Build up our desired map file define.
 $fileContent = "#define MAP_OVERRIDE_{$_GET['map']}";
+$fileLength = strlen($fileContent);
 
 // Now do a put query - update context
 $options = [
 	'http' => [
 		'method' => 'PUT',
 		'header' => "Api: {$tgsApiVersion}\r\n" .
-			"Authorization: Bearer {$bearers}\r\n" .
+			"Accept: application/json\r\n" .
+			"Content-Type: application/octet-stream\r\n" .
+			"Content-Length: {$fileLength}\r\n" .
+			"Authorization: Bearer {$bearer}\r\n" .
 			"Instance: {$instance}",
 		'content' => $fileContent
 	]
@@ -117,10 +129,6 @@ $context = stream_context_create($options);
 
 // Run the query
 $response = file_get_contents($tgsUrl . "Transfer?ticket={$fileTicket}", false, $context);
-if(!$response) {
-	echo json_error("Failed to update the file on TGS");
-	return;
-}
 
 // All going according to plan, we should now have the file in place with the right map override.
 // Tell TGS to recompile
@@ -129,7 +137,9 @@ $options = [
 	'http' => [
 		'method' => 'PUT',
 		'header' => "Api: {$tgsApiVersion}\r\n" .
-			"Authorization: Bearer {$bearers}\r\n" .
+			"Accept: application/json\r\n" .
+			"Content-Length: 0\r\n" .
+			"Authorization: Bearer {$bearer}\r\n" .
 			"Instance: {$instance}"
 	]
 ];
