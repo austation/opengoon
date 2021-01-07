@@ -1,3 +1,3 @@
 @echo off
 
-powershell -NoProfile -ExecutionPolicy Bypass -File PreCompile.ps1 -game_directory %1
+powershell -NoProfile -ExecutionPolicy Bypass -File PostCompile.ps1 -game_directory %1
