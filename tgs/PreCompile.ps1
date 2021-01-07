@@ -50,8 +50,8 @@ if((Test-Path -Path "..\..\Byond\ActiveVersion.txt") -and (Get-Content -Path "..
 	$str = Get-Content -Path "..\..\Byond\ActiveVersion.txt"
 	$byondVersion = $str.Split(".")
 }
-Add-Content -Path $build_file -Value "var/global/ci_dm_version_major = `"$byondVersion[0]`""
-Add-Content -Path $build_file -Value "var/global/ci_dm_version_minor = `"$byondVersion[1]`""
+Add-Content -Path $build_file -Value "var/global/ci_dm_version_major = `"$($byondVersion[0])`""
+Add-Content -Path $build_file -Value "var/global/ci_dm_version_minor = `"$($byondVersion[1])`""
 
 # Build times
 Write-Host "Setting timezone and build date/time..."
