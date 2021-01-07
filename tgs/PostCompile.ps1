@@ -15,7 +15,7 @@ $node_path = "C:\TGS\Persistent\browserassets\node_modules"
 
 # First, recompile tgui
 Write-Host "Recompiling tgui..."
-cd $game_directory + "\tgui"
+cd "$game_directory\tgui"
 
 # Build tgui for production
 .\bin\tgui.ps1
@@ -24,7 +24,7 @@ cd $game_directory + "\tgui"
 
 # cd to it
 Write-Host "Building and copying CDN files..."
-cd $game_directory + "\browserassets"
+cd "$game_directory\browserassets"
 
 # Now copy the node modules folder in. This might take a bit.
 Copy-Item -Path $node_path -Destination "." -Recurse
