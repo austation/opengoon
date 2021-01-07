@@ -27,7 +27,8 @@ Write-Host "Building and copying CDN files..."
 cd "$game_directory\browserassets"
 
 # Now copy the node modules folder in. This might take a bit.
-Copy-Item -Path $node_path -Destination "." -Recurse
+Write-Host "Copying node modules now, " -NoNewline; Write-Host "this WILL take a hot minute." -ForegroundColor Red
+Copy-Item -Path $node_path -Destination "." -Recurse -Verbose
 
 # build the CDN with grunt
 grunt build-cdn
