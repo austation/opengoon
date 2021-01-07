@@ -61,11 +61,11 @@ Add-Content -Path $build_file -Value "#define BUILD_TIME_TIMEZONE_ALPHA `"$([Reg
 Add-Content -Path $build_file -Value "#define BUILD_TIME_TIMEZONE_OFFSET $(($timezone.BaseUtcOffset.Hours * 100) + ($timezone.BaseUtcOffset.Minutes))" # gamer math
 Add-Content -Path $build_file -Value "#define BUILD_TIME_FULL `"$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')`""
 Add-Content -Path $build_file -Value "#define BUILD_TIME_YEAR $(Get-Date -Format 'yyyy')"
-Add-Content -Path $build_file -Value "#define BUILD_TIME_MONTH $(Get-Date -Format 'M')"
-Add-Content -Path $build_file -Value "#define BUILD_TIME_DAY $(Get-Date -Format 'd')"
-Add-Content -Path $build_file -Value "#define BUILD_TIME_HOUR $(Get-Date -Format 'H')"
-Add-Content -Path $build_file -Value "#define BUILD_TIME_MINUTE $(Get-Date -Format 'm')"
-Add-Content -Path $build_file -Value "#define BUILD_TIME_SECOND $(Get-Date -Format 's')"
+Add-Content -Path $build_file -Value "#define BUILD_TIME_MONTH $(Get-Date -Format '%M')"
+Add-Content -Path $build_file -Value "#define BUILD_TIME_DAY $(Get-Date -Format '%d')"
+Add-Content -Path $build_file -Value "#define BUILD_TIME_HOUR $(Get-Date -Format '%H')"
+Add-Content -Path $build_file -Value "#define BUILD_TIME_MINUTE $(Get-Date -Format '%m')"
+Add-Content -Path $build_file -Value "#define BUILD_TIME_SECOND $(Get-Date -Format '%s')"
 Add-Content -Path $build_file -Value "#define BUILD_TIME_UNIX $(Get-Date -UFormat %s -Millisecond 0)"
 
 # Preload - This is just a static string
