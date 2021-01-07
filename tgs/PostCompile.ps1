@@ -27,16 +27,16 @@ Write-Host "Building and copying CDN files..."
 cd $game_directory + "\browserassets"
 
 # Now copy the node modules folder in. This might take a bit.
-Copy-Item -Path $node_path -Destination $game_directory + "\browserassets" -Recurse
+Copy-Item -Path $node_path -Destination "." -Recurse
 
 # build the CDN with grunt
 grunt build-cdn
 
 # Copy the CDN back to its correct location, overwriting
-Copy-Item -Path $game_directory + "\browserassets\build\*" -Destination $cdn_path -Recurse -Force
+Copy-Item -Path ".\build\*" -Destination $cdn_path -Recurse -Force
 
 # Because image compression is disabled, we need to manually copy those...
-Copy-Item -Path $game_directory + "\browserassets\images" -Destination $cdn_path -Recurse -Force
+Copy-Item -Path ".\images" -Destination $cdn_path -Recurse -Force
 
 # While we're at it, let's rebuild the preload rsc file.
 
@@ -48,4 +48,4 @@ cd $game_directory
 7z a goonstation.zip goonstation.rsc
 
 # Just copy that out to the the rsc path
-Copy-Item -Path $game_directory + "\goonstation.zip" -Destination $rsc_path -Force
+Copy-Item -Path ".\goonstation.zip" -Destination $rsc_path -Force
