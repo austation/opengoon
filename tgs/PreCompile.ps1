@@ -4,7 +4,7 @@ param (
 )
 
 # Start by switching to the game's folder
-cd $game_directory
+Set-Location $game_directory
 
 # Build file so I don't have to keep typing it
 Write-Host "Resetting build file..."
@@ -71,3 +71,7 @@ Add-Content -Path $build_file -Value "#define BUILD_TIME_UNIX $(Get-Date -UForma
 # Preload - This is just a static string
 Write-Host "Setting preload URL..."
 Add-Content -Path $build_file -Value "#define PRELOAD_RSC_URL `"http://rsc.austation.net/goonstation.zip`""
+
+# With the build file updated, let's update the sound cache next...
+# All we need to do is just run the script.
+.\buildSoundList.ps1

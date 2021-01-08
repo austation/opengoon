@@ -15,7 +15,7 @@ $node_path = "C:\TGS\Persistent\browserassets\node_modules"
 
 # First, recompile tgui
 Write-Host "Recompiling tgui..."
-cd "$game_directory\tgui"
+Set-Location "$game_directory\tgui"
 
 # Build tgui for production
 .\bin\tgui.ps1
@@ -24,7 +24,7 @@ cd "$game_directory\tgui"
 
 # cd to it
 Write-Host "Building and copying CDN files..."
-cd "$game_directory\browserassets"
+Set-Location "$game_directory\browserassets"
 
 # Now copy the node modules folder in. This might take a bit.
 Write-Host "Copying node modules now, " -NoNewline; Write-Host "this WILL take a hot minute." -ForegroundColor Red
@@ -43,7 +43,7 @@ Copy-Item -Path ".\images" -Destination $cdn_path -Recurse -Force
 
 # cd to the main folder
 Write-Host "Zipping and copying rsc file..."
-cd $game_directory
+Set-Location $game_directory
 
 # zip it up. This requires 7z cli to be installed
 7z a goonstation.zip goonstation.rsc
