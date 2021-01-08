@@ -1,5 +1,5 @@
 # OpenGoon Project
-Open source tools and code to get gooncode servers working. Currently includes an API implementation, along with SQL schema.
+Open source tools and code to get gooncode servers working. Currently includes an API implementation, along with SQL schema plus event build scripts for TGS.
 
 # Usage
 Because it's PHP, usage is braindead simple, as long as you have a DB setup.
