@@ -21,7 +21,7 @@ $output = sql_query("SELECT * FROM `vpn_whitelist` WHERE `ckey` = ?", ['s', $_GE
 $result = ['whitelisted' => boolval($output), 'response' => ''];
 // We have no authorization to make a query, so just tell the server the IP is safe.
 if($vpnAuth === "none") {
-	$result['response'] = json_encode(['vpn' => false, 'tor' => false, 'proxy' => false, 'hosting' => false]);
+	$result['response'] = json_encode(['security' => ['vpn' => false, 'tor' => false, 'proxy' => false, 'hosting' => false]]);
 } else { //we're authorized, query the API
 	$result['response'] = file_get_contents("https://ipinfo.io/{$_GET['ip']}/privacy?token={$vpnAuth}");
 }
