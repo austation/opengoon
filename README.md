@@ -2,28 +2,40 @@
 Open source tools and code to get gooncode servers working. Currently includes an API implementation, along with SQL schema plus event build scripts for TGS.
 
 # Usage
-Because it's PHP, usage is braindead simple, as long as you have a DB setup.
-1. Install a HTTP server like apache, nginx or IIS, make a site and bind it to **HTTP**. BYOND communicates over insecure HTTP, and can't use HTTPS. You will also need to setup CORS support on your webserver, else the ban panel won't work! Follow a relevant guide for this.
-2. Setup the latest version of PHP on your server (probably 7.4). Follow a relevant guide for this.
-3. Copy and paste the api folder into the public HTML directory of your server.
-4. Install a MySQL derived SQL server, like MySQL itself or MariaDB, and create a new database, and a user that uses **standard** authentication, with access to the new database.
-5. Edit the `config.php` file in the web server's api folder to setup the auth key and SQL server authentication. You'll also need to configure the IP and Ports of your goon server. Note, the key (number) in the list is the "Server Key" for the matching goon server.
-6. Next, edit the goon config file for the server. I'll add an example soon, but mainly, set the goonhub api key to the one used in the config, set the goonhub api endpoint to the address of your API server, set the raw IP address for your api too, set the notes api endpoint to the same address as the main goonhub api, except append `/api/notes` on the end, and set the notes api key to the **MD5 Hash** of the main api key, because gooncode doesn't actually hash the key for the notes api. You can read the configuration.dm file in gooncode for the full list of options, a lot of which aren't actually in the default config.txt for unknown reasons.
-7. Finally, with config done, connect into your SQL server and execute the provided SQL file to generate the schema the API will use.
-8. Start up the goon server and enjoy API functionality for bans, antag rep, player information, notes, critter gauntlet, numbers station and jobbans!
+## API
+API setup is fairly simple. Basic step-by-step:
+1. Set up a HTTP webserver and bind it to some port. For now, the API doesn't need to be public facing, and ideally shouldn't be. This might change in a future release.
+2. Configure the web server with a recent version of PHP (7.4?), and *set your CORS headers* (Google for details regarding your specific server. If you use IIS, set the custom headers manually, don't use the extension).
+3. Copy the api directory from this repository into the public html directory for your server.
+4. Install and setup a MySQL (or MariaDB, at your own risk) SQL server and configure a new user with *standard* authentication, for the API to use.
+5. Create a new database for the API and give the new user access. Then, executed the provided schema file on the new database to configure it for the API.
+6. Update the `config.php` file in the API directory to set your desired options, mainly API key and database credentials. You'll also need to set the IP address(es) and port(s) for your servers here, to allow IP checking and callbacks.
+7. Update your goonstation config file to point to the API and use the right key. You should point the primary API address, as well as the player notes config options to the API.
+8. Done!
 
-## Regarding Ban Panel
-The panel (and almost all other html interfaces ingame for that matter) is loaded from goon's CDN server.
-Not using the CDN will break a lot of icons and interfaces in game that rely on it.
-The problem is that the ban panel requires some coding changes to work with the new API address (without DNS overrides).
-These changes are not reflected on the goonstation CDN, so if you want all interfaces to work AND the ban panel to work, you'll need to host your own CDN.
-I scraped the files from goon's CDN, but for ethical and copyright purposes I won't be hosting them here. If you're interested, shoot me a DM on Discord (Terra#4852) and I can send you a copy of the files if needed.
-Suffice it to say, you'll want to run the server through cloudflare or a similar service to decrease origin load.
+## TGS
+The API comes with (optional) features to allow interfacing with TGSv4 for map switching, as well as some event scripts for TGSv4 to build TGUI and the CDN files with each new deployment, as well as update the build file. AuStation's goon fork also has some Discord functionality which can be configured in the TGSv4 control panel. Basic setup.
+Make sure you have npm, yarn and 7zip CLI installed and added to the *system* path to ensure correct functionality. You'll also need to also install grunt to a folder that's in the system path too. Whether you add your default AppData npm dir or use a custom path is up to you.
+1. Install a working TGSv4 deployment. Read the instructions on tgstation/tgstation-server for assistance.
+3. Make an instance using a desired goon repo. Note: austation/goonstation has specific changes to allow for good TGS integration. You should fork from there.
+2. Drop the event scripts from this repo's tgs folder into the EventScripts folder in the server instance's Configuration folder.
+3. Edit the configuration in PostCompile.ps1 to change the output directory for the CDN, RSC and the location of the persistent node modules folder. The persistent node modules folder needs to be built by running `npm install` in the browserassets folder of the goonstation repo, resolving the several install errors present and copying it somewhere for storage.
+4. Run a deployment in TGS to update everything.
+5. Edit the API's `config.php` file to setup the correct TGS API version and address, as well as credentials. Also make sure to set the instance ID in the servers array.
+6. Done! In a best case scenario, everything should work properly.
 
-Also note, the CDN address is actually hardcoded into the server in a few spots. You'll need to change the address to match yours. You can see an example on austation's goon fork [here](https://github.com/austation/goonstation/commit/77c1b4b58878c09c0c98c9a2bfd09eea37baba33).
+# Troubleshooting
+Q: Icons in the changelog or possibly other panels aren't loading.
+A: Your CORS headers probably aren't set. Follow a guide to set them for your chosen webserver.
+
+Q: Map switching isn't working.
+A: The map switcher requires a working TGS instance to be configured in the API configuration for map switching to work. Refer to the setup guide.
+
+Q: CDN files aren't being built in the deployment folder, or copied to the chosen directory.
+A: Make sure that you have grunt installed and the npm path it's installed to added to the *system* path.
 
 # Known Issues
-Currently, there are a few issues I'm aware of. Firstly, VPN checks don't work quite now but I was finishing the rest of the API and haven't looked into it just yet, because it's low priority. Also it has terrible logging because I wanted to announce this for internet points, I will polish this very soon, once I get all features in. Also I need to add cloud saves.
+Right now the ban panel isn't working, because of clientside insecurity. This is WIP.
 
-# Disclaimer
-I wrote this API out of desire to create my own, since bee is making theirs closed source until some time next year at least. I don't yet know how well this will hold up in production, but I will probably run an austation goon server at some point to test things out and finally experience low ping gooncode.
+# License
+This project is licensed under the same license as Goonstation (CC-BY-NC-SA) for maximum compatibility. See the LICENSE file for details.
