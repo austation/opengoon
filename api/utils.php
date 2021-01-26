@@ -159,25 +159,43 @@ function check_params($keys, $assocList) {
 }
 
 // Authentication check function. Takes some self-explanatory settings. Note, checks $_GET global for values.
-function check_auth($checkVesion = true, $customAuthKey = false, $iterateIps = false) {
+function check_auth($checkVesion = true, $customAuthKey = false, $iterateIps = false, $jwt = false) {
 	global $authKey, $servers, $authentication, $apiVersion;
 	// Debug check - Don't abuse for god sake!
 	if(!$authentication) {
 		return true;
 	}
 
+	// Handle JWT. Keep it strict with no custom params or anything.
+	if($jwt) {
+		if(key_exists('auth', $_GET)) {
+			$result = verify_jwt($_GET['auth']);
+			if($result) {
+				log_info("Successful JWT authentication by ckey {$result} and IP address {$_SERVER['REMOTE_ADDR']}");
+				return true;
+			} else {
+				log_error("JWT authentication FAILED with token {$_GET['auth']} and IP address {$_SERVER['REMOTE_ADDR']}");
+				return false;
+			}
+		} else {
+			log_error("JWT authentication failed due to missing param, IP address {$_SERVER['REMOTE_ADDR']}");
+			return false;
+		}
+	}
+
 	// Auth key checks
 	if($customAuthKey && key_exists($customAuthKey, $_GET)) {
 		if($_GET[$customAuthKey] !== md5($authKey)) {
-			log_error("Auth failed, custom key {$customAuthKey} with param value {$_GET[$customAuthKey]}");
+			log_error("Auth failed, custom key {$customAuthKey} with param value {$_GET[$customAuthKey]} and IP address {$_SERVER['REMOTE_ADDR']}");
 			return false;
 		}
 	} elseif(key_exists('auth', $_GET)) {
 		if($_GET['auth'] !== md5($authKey)) {
-			log_error("Auth failed with param value {$_GET['auth']}");
+			log_error("Auth failed with param value {$_GET['auth']} and IP address {$_SERVER['REMOTE_ADDR']}");
 			return false;
 		}
 	} else {
+		log_error("Auth failed due to missing param, IP address {$_SERVER['REMOTE_ADDR']}");
 		return false;
 	}
 
@@ -200,6 +218,7 @@ function check_auth($checkVesion = true, $customAuthKey = false, $iterateIps = f
 			return false;
 		}
 	} else {
+		log_error("Auth failed due to missing data_server param, IP address {$_SERVER['REMOTE_ADDR']}");
 		return false;
 	}
 
@@ -212,12 +231,61 @@ function check_auth($checkVesion = true, $customAuthKey = false, $iterateIps = f
 	}
 
 	// Finally return true if all auth checks passed
+	log_trace("Authentication passed from IP address {$_SERVER['REMOTE_ADDR']}");
 	return true;
 }
 
 // Gets a simple JSON error string for the API.
 function json_error($message) {
 	return json_encode(['status' => 'error', 'error' => $message]);
+}
+
+// Le funny base64url functions for JWT
+function base64url_encode($data)
+{
+	$b64 = base64_encode($data);
+
+	if ($b64 === false) {
+		return false;
+	}
+
+	$url = strtr($b64, '+/', '-_');
+
+	return rtrim($url, '=');
+}
+
+function base64url_decode($data, $strict = false)
+{
+	$b64 = strtr($data, '-_', '+/');
+
+	return base64_decode($b64, $strict);
+}
+
+// Verify a JWT token. False if invalid, otherwise returns the encoded ckey
+function verify_jwt($token) {
+	global $jwtSecret;
+
+	$arr = explode('.', $token);
+	if(count($arr) !== 3) {
+		return false;
+	}
+
+	// Take first two parts and check if they hash to the right value
+	$result = base64url_encode(hash_hmac("sha256", $arr[0] . '.' . $arr[1], $jwtSecret, true));
+
+	if($result !== $arr[2]) {
+		return false;
+	}
+
+	$payload = json_decode(base64_decode($arr[1]), true);
+
+	// Check expiry
+	if(!key_exists('exp', $payload) || $payload['exp'] < time()) {
+		return false;
+	}
+
+	// Must have an associated ckey
+	return key_exists('sub', $payload) ? $payload['sub'] : false;
 }
 
 // Simple logging functions

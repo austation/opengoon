@@ -7,6 +7,9 @@ $apiVersion = 1.3;
 // Key used to authenticate communications between the BYOND server and the API. Keep this secure.
 $authKey = "auth_key";
 
+// Secret used to sign JWT tokens for verification
+$jwtSecret = "jwt_secret";
+
 // Address used to access the database. SQL file for easy setup included.
 $databaseAddress = "127.0.0.1";
 // DB username
