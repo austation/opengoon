@@ -30,6 +30,10 @@ Set-Location "$game_directory\tgui"
 Write-Host "Building and copying CDN files..."
 Set-Location "$game_directory\browserassets"
 
+# Now write the revision to file
+New-Item -Path . -Name "revision" -Force
+Add-Content -Path ".\revision" -Value "$commit"
+
 # Symlink the cached node_modules folder
 Write-Host "Symlinking node_modules folder..."
 New-Item -ItemType SymbolicLink -Path . -Name "node_modules" -Value $node_path

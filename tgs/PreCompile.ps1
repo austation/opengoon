@@ -1,7 +1,11 @@
 param (
 	$game_directory,
-	$commit
+	$repo
 )
+
+# Get the commit ID first
+Set-Location "$game_directory\..\..\Repository"
+$commit = git rev-parse --short HEAD
 
 # Start by switching to the game's folder
 Set-Location $game_directory
@@ -10,11 +14,8 @@ Set-Location $game_directory
 Write-Host "Resetting build file..."
 $build_file = ".\_std\__build.dm"
 
-# Nuke the default build file
-Remove-item -Path $build_file -Force
-
 # We have the technology to rebuild him.
-New-Item -Path ".\_std\" -Name "__build.dm"
+New-Item -Path ".\_std\" -Name "__build.dm" -Force
 
 Add-Content -Path $build_file -Value "#define DEBUG"
 
@@ -38,7 +39,7 @@ Write-Host "Setting event toggles..."
 
 # Version Control
 Write-Host "Setting version control..."
-Add-Content -Path $build_file -Value "var/global/vcs_revision = `"Unknown`""
+Add-Content -Path $build_file -Value "var/global/vcs_revision = `"$commit`""
 # Without github API requests I can't get this, so we'll bodge it.
 Add-Content -Path $build_file -Value "var/global/vcs_author = `"AuStation`""
 
