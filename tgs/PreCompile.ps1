@@ -6,6 +6,7 @@ param (
 # Get the commit ID first
 Set-Location "$game_directory\..\..\Repository"
 $commit = git rev-parse --short HEAD
+$commit = $commit.trim()
 
 # Start by switching to the game's folder
 Set-Location $game_directory

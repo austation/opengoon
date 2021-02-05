@@ -16,6 +16,7 @@ $node_path = "C:\TGS\Persistent\browserassets\node_modules"
 # Get the commit ID first
 Set-Location "$game_directory\..\..\Repository"
 $commit = git rev-parse --short HEAD
+$commit = $commit.trim()
 
 # First, recompile tgui
 Write-Host "Recompiling tgui..."
