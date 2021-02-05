@@ -38,7 +38,7 @@ Write-Host "Setting event toggles..."
 
 # Version Control
 Write-Host "Setting version control..."
-Add-Content -Path $build_file -Value "var/global/vcs_revision = `"$commit`""
+Add-Content -Path $build_file -Value "var/global/vcs_revision = `"Unknown`""
 # Without github API requests I can't get this, so we'll bodge it.
 Add-Content -Path $build_file -Value "var/global/vcs_author = `"AuStation`""
 

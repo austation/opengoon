@@ -13,6 +13,10 @@ $rsc_path = "C:\inetpub\wwwroot-rsc"
 # So while it may be jank, it does work.
 $node_path = "C:\TGS\Persistent\browserassets\node_modules"
 
+# Get the commit ID first
+Set-Location "$game_directory\..\..\Repository"
+$commit = git rev-parse --short HEAD
+
 # First, recompile tgui
 Write-Host "Recompiling tgui..."
 Set-Location "$game_directory\tgui"
@@ -26,18 +30,25 @@ Set-Location "$game_directory\tgui"
 Write-Host "Building and copying CDN files..."
 Set-Location "$game_directory\browserassets"
 
-# Now copy the node modules folder in. This might take a bit.
-Write-Host "Copying node modules now, " -NoNewline; Write-Host "this WILL take a hot minute." -ForegroundColor Red
-Copy-Item -Path $node_path -Destination "." -Recurse -Verbose
+# Symlink the cached node_modules folder
+Write-Host "Symlinking node_modules folder..."
+New-Item -ItemType SymbolicLink -Path . -Name "node_modules" -Value $node_path
 
 # build the CDN with grunt
 grunt build-cdn
 
+# Make the folder
+Write-Host "CDN built, making folder and copying files..."
+New-Item -ItemType Directory -Path $cdn_path -Name $commit
+
 # Copy the CDN back to its correct location, overwriting
-Copy-Item -Path ".\build\*" -Destination $cdn_path -Recurse -Force
+Copy-Item -Path ".\build\*" -Destination "$cdn_path\$commit" -Recurse -Force
 
 # Because image compression is disabled, we need to manually copy those...
-Copy-Item -Path ".\images" -Destination $cdn_path -Recurse -Force
+Copy-Item -Path ".\images" -Destination "$cdn_path\$commit" -Recurse -Force
+
+# Symlink the latest version of the CDN
+New-Item -ItemType SymbolicLink -Path $cdn_path -Name "latest" -Value "$cdn_path\$commit" -Force
 
 # While we're at it, let's rebuild the preload rsc file.
 
