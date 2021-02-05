@@ -33,7 +33,7 @@ Set-Location "$game_directory\browserassets"
 
 # Now write the revision to file
 New-Item -Path . -Name "revision" -Force
-Add-Content -Path ".\revision" -Value "$commit"
+Add-Content -Path ".\revision" -Value "$commit" -NoNewline
 
 # Symlink the cached node_modules folder
 Write-Host "Symlinking node_modules folder..."
