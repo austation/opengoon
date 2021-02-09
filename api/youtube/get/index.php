@@ -44,7 +44,7 @@ flush();
 if(session_id()) session_write_close();
 
 $id = $matches[1];
-$command = $youtubedlPath . " -x --audio-format vorbis -o \"{$youtubeAudioOutput}/%(id)s.%(ext)s\" " . escapeshellarg($urlDecoded);
+$command = "python " . $youtubedlPath . " -x --audio-format vorbis -o \"{$youtubeAudioOutput}/%(id)s.%(ext)s\" " . escapeshellarg($urlDecoded);
 
 shell_exec($command);
 

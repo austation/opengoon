@@ -41,7 +41,7 @@ $tgsPass = "Admin";
 $tgsApiVersion = "Tgstation.Server.Api/8.1.2";
 
 // Path to the youtube-dl executable. Used for song downloads. Set to false to disable functionality.
-$youtubedlPath = "C:\\youtube-dl.exe";
+$youtubedlPath = "C:\\youtube-dl";
 
 // Directory to output downloaded audio to. Should be a webserver directory.
 $youtubeAudioOutput = "C:/inetpub/wwwroot-rsc/youtube-audio";
