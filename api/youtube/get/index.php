@@ -49,11 +49,11 @@ $command = "python " . $youtubedlPath . " -x --audio-format vorbis -o \"{$youtub
 shell_exec($command);
 
 // Grab the filesize in KiB for funnies
-$size = filesize("{$youtubeAudioOutput}/{$urlDecoded}.ogg") / 1024;
+$size = filesize("{$youtubeAudioOutput}/{$matches[1]}.ogg") / 1024;
 
 // Should have the file downloaded now, can do our callback
 $data = [
-	"file" => "{$youtubeAudioWeb}/{$urlDecoded}.ogg",
+	"file" => "{$youtubeAudioWeb}/{$matches[1]}.ogg",
 	"key" => $_GET['key'],
 	"title" => "YouTube Audio", // Todo actually get song title
 	"filesize" => "{$size}KiB",
