@@ -44,16 +44,18 @@ flush();
 if(session_id()) session_write_close();
 
 $id = $matches[1];
-$command = "python " . $youtubedlPath . " -x --audio-format vorbis -o \"{$youtubeAudioOutput}/%(id)s.%(ext)s\" " . escapeshellarg($urlDecoded) . " 2>&1";
-
-shell_exec($command);
+// Be efficient; have a plan to kill everyone you meet
+if(!file_exists("{$youtubeAudioOutput}/{$id}.mp3")) {
+	$command = "python " . $youtubedlPath . " -x --audio-format mp3 -o \"{$youtubeAudioOutput}/%(id)s.%(ext)s\" " . escapeshellarg($id) . " 2>&1";
+	shell_exec($command);
+}
 
 // Grab the filesize in KiB for funnies
-$size = filesize("{$youtubeAudioOutput}/{$matches[1]}.ogg") / 1024;
+$size = round(filesize("{$youtubeAudioOutput}/{$id}.mp3") / 1024);
 
 // Should have the file downloaded now, can do our callback
 $data = [
-	"file" => "{$youtubeAudioWeb}/{$matches[1]}.ogg",
+	"file" => "{$youtubeAudioWeb}/{$id}.mp3",
 	"key" => $_GET['key'],
 	"title" => "YouTube Audio", // Todo actually get song title
 	"filesize" => "{$size}KiB",
