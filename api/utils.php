@@ -4,9 +4,9 @@ require 'config.php';
 const JSON_SUCCESS = "{\"status\":\"OK\"}"; // success value because I'm lazy af and don't wanna type it. We just use this to add a small body to requests with no return, so the server doesn't die.
 
 // Make a callback to a server. Takes a server address, port and associative array of arguments to pass, along with a proc and optional datum to call
-function callback($addr, $port, $args, $proc, $datum = false) {
+function callback($addr, $port, $args, $proc = false, $datum = false, $type = "hubCallback") {
 	global $authKey;
-	$queryStr = "?type=hubCallback&auth=" . md5($authKey) . "&proc=" . $proc . ($datum !== false ? "&datum=" . $datum : "") . "&data=" . json_encode($args);
+	$queryStr = "?type={$type}&auth=" . md5($authKey) . ($proc !== false ? "&proc=" . $proc : "") . ($datum !== false ? "&datum=" . $datum : "") . "&data=" . json_encode($args);
 	$query = "\x00\x83" . pack('n', strlen($queryStr) + 6) . "\x00\x00\x00\x00\x00" . $queryStr . "\x00";
 
 	$server = socket_create(AF_INET, SOCK_STREAM, SOL_TCP) or exit("Could not create TCP socket");
