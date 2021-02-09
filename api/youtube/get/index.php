@@ -52,13 +52,13 @@ shell_exec($command);
 $size = filesize("{$youtubeAudioOutput}/{$urlDecoded}.ogg") / 1024;
 
 // Should have the file downloaded now, can do our callback
-$data = ["data" => json_encode([
+$data = [
 	"file" => "{$youtubeAudioWeb}/{$urlDecoded}.ogg",
 	"key" => $_GET['key'],
 	"title" => "YouTube Audio", // Todo actually get song title
 	"filesize" => "{$size}KiB",
 	"duration" => "Unknown Duration" // Also todo
-])];
+];
 
 callback($servers[$_GET['server']]['ip'], $servers[$_GET['server']]['port'], $data, false, false, "youtube")
 
