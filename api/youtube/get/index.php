@@ -20,7 +20,8 @@ if(!$youtubedlPath) {
 	return;
 }
 
-$youtubeRegex = '/\b(?:(?:youtube\.com\/watch\?v=)|(?:youtu\.be\/)|)((?:[a-z]|[A-Z]|[0-9]|[-_]){11})\b/';
+// GNARLY, BRUH!
+$youtubeRegex = '/^(?:(?:https:\/\/)|)(?:(?:(?:(?:www\.)|)youtube\.com\/watch\?v=)|(?:youtu\.be\/)|)((?:[a-z]|[A-Z]|[0-9]|[-_]){11})$/';
 $urlDecoded = urldecode($_GET['video']);
 
 // Extract the ID from the text
@@ -50,6 +51,15 @@ if(!file_exists("{$youtubeAudioOutput}/{$id}.mp3")) {
 	shell_exec($command);
 }
 
+// We do a little bit of trolling... and cache the video's json data too
+if(!file_exists("{$youtubeAudioOutput}/{$id}.json")) {
+	$command = "python " . $youtubedlPath . " -j " . escapeshellarg($id) . " 1>" . escapeshellarg("{$youtubeAudioOutput}/{$id}.json") . " 2>&1";
+	shell_exec($command);
+}
+
+// Now retrieve the json data from file
+$data = json_decode(file_get_contents("{$youtubeAudioOutput}/{$id}.json"), true);
+
 // Grab the filesize in KiB for funnies
 $size = round(filesize("{$youtubeAudioOutput}/{$id}.mp3") / 1024);
 
@@ -57,9 +67,9 @@ $size = round(filesize("{$youtubeAudioOutput}/{$id}.mp3") / 1024);
 $data = [
 	"file" => "{$youtubeAudioWeb}/{$id}.mp3",
 	"key" => $_GET['key'],
-	"title" => "YouTube Audio", // Todo actually get song title
+	"title" => $data['title'], // Todo actually get song title
 	"filesize" => "{$size}KiB",
-	"duration" => "Unknown Duration" // Also todo
+	"duration" => "{$data['duration']}s" // Also todo
 ];
 
 callback($servers[$_GET['server']]['ip'], $servers[$_GET['server']]['port'], $data, false, false, "youtube")
