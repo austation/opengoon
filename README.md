@@ -34,8 +34,5 @@ A: The map switcher requires a working TGS instance to be configured in the API 
 Q: CDN files aren't being built in the deployment folder, or copied to the chosen directory.
 A: Make sure that you have grunt installed and the npm path it's installed to added to the *system* path.
 
-# Known Issues
-Right now the ban panel isn't working, because of clientside insecurity. This is WIP.
-
 # License
 This project is licensed under the same license as Goonstation (CC-BY-NC-SA) for maximum compatibility. See the LICENSE file for details.
