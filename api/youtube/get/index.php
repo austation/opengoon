@@ -53,7 +53,7 @@ if(!file_exists("{$youtubeAudioOutput}/{$id}.mp3")) {
 
 // We do a little bit of trolling... and cache the video's json data too
 if(!file_exists("{$youtubeAudioOutput}/{$id}.json")) {
-	$command = "python " . $youtubedlPath . " -j " . escapeshellarg($id) . " 1>" . escapeshellarg("{$youtubeAudioOutput}/{$id}.json") . " 2>&1";
+	$command = "python " . $youtubedlPath . " -j " . escapeshellarg($id) . " 1>" . escapeshellarg("{$youtubeAudioOutput}/{$id}.json") . " 2>nul";
 	shell_exec($command);
 }
 
