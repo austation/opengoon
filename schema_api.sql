@@ -1,4 +1,4 @@
--- OpenGoon API SQL Schema v1.1 --
+-- OpenGoon API SQL Schema v1.2 --
 
 DROP TABLE IF EXISTS `player`;
 CREATE TABLE IF NOT EXISTS `player` (
@@ -112,3 +112,12 @@ CREATE TABLE IF NOT EXISTS `notes` (
 	`timestamp` DATETIME NOT NULL DEFAULT NOW(), -- bans and stuff don't have this, but I thought it'd be useful to show times notes were added.
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `exp`;
+CREATE TABLE IF NOT EXISTS `exp` (
+	`id` INT UNISNGED NOT NULL AUTO_INCREMENT,
+	`ckey` VARCHAR(32) NOT NULL,
+	`type` VARCHAR(32) NOT NULL,
+	`value` INT UNISNGED NOT NULL DEFAULT '0',
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
