@@ -23,7 +23,7 @@ Write-Host "Recompiling tgui..."
 Set-Location "$game_directory\tgui"
 
 # Build tgui for production
-.\bin\tgui.ps1
+.\bin\tgui_.ps1
 
 # This should have outputted the built tgui to browserassets. We can handle the CDN now.
 
