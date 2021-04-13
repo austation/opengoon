@@ -44,7 +44,7 @@ grunt build-cdn
 
 # Make the folder
 Write-Host "CDN built, making folder and copying files..."
-New-Item -ItemType Directory -Path $cdn_path -Name $commit
+New-Item -ItemType Directory -Path $cdn_path -Name $commit -Force
 
 # Copy the CDN back to its correct location, overwriting
 Copy-Item -Path ".\build\*" -Destination "$cdn_path\$commit" -Recurse -Force
