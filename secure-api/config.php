@@ -3,7 +3,7 @@
 // Note: This is a stripped down config file for the secure endpoints.
 
 // Current API Version
-$apiVersion = 1.5;
+$apiVersion = 1.6;
 
 // Key used to authenticate communications between the BYOND server and the API. Keep this secure.
 $authKey = "auth_key";

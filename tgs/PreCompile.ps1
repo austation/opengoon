@@ -3,6 +3,10 @@ param (
 	$repo
 )
 
+# Config
+# Server ID number. This should match what's in your goon server config.
+$server_id = 1
+
 # Get the commit ID first
 Set-Location "$game_directory\..\..\Repository"
 $commit = git rev-parse --short HEAD
@@ -69,6 +73,10 @@ Add-Content -Path $build_file -Value "#define BUILD_TIME_HOUR $(Get-Date -Format
 Add-Content -Path $build_file -Value "#define BUILD_TIME_MINUTE $(Get-Date -Format '%m')"
 Add-Content -Path $build_file -Value "#define BUILD_TIME_SECOND $(Get-Date -Format '%s')"
 Add-Content -Path $build_file -Value "#define BUILD_TIME_UNIX $(Get-Date -UFormat %s -Millisecond 0)"
+
+# Server ID
+Write-Host "Setting server ID number..."
+Add-Content -Path $build_file -Value "#define SERVER_NUMBER $server_id"
 
 # Preload - This is just a static string
 Write-Host "Setting preload URL..."
