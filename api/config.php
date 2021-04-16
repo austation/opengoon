@@ -38,7 +38,7 @@ $tgsUser = "Admin";
 $tgsPass = "Admin";
 
 // TGS API Version - Check if code changes are needed before changing
-$tgsApiVersion = "Tgstation.Server.Api/8.1.2";
+$tgsApiVersion = "Tgstation.Server.Api/9.0.1";
 
 // Path to the youtube-dl executable. Used for song downloads. Set to false to disable functionality.
 $youtubedlPath = "C:\\youtube-dl";
