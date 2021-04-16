@@ -5,6 +5,8 @@
 require '../config.php';
 require '../utils.php';
 
+header("Content-Type: application/json");
+
 if(!check_auth(false, 'api_key', true)) {
 	http_response_code(401);
 	return;
