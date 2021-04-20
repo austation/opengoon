@@ -8,7 +8,7 @@ header("Content-Type: text/plain");
 
 // Note: specific errors can't be given because the goon server doesn't handle them.
 // For this endpoint, all it cares about are status codes.
-if(!check_auth(false, false, true)) {
+if(!check_auth(false, 'api_key', true)) {
 	http_response_code(401);
 	return;
 }
