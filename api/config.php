@@ -43,8 +43,8 @@ $tgsApiVersion = "Tgstation.Server.Api/9.0.1";
 // Path to the youtube-dl executable. Used for song downloads. Set to false to disable functionality.
 $youtubedlPath = "C:\\youtube-dl";
 
-// Path to the DECTalk say.exe file, used for outputting TTS audio. Set to false to disable functionality.
-$dectalkPath = "C:\\dectalk\\say.exe";
+// Path to the DECTalk *FOLDER*, containing say.exe, used for outputting TTS audio. Set to false to disable functionality.
+$dectalkPath = "C:\\dectalk";
 
 // Directory to output downloaded audio to. Should be a webserver directory.
 $audioOutput = "C:/inetpub/wwwroot-rsc/youtube-audio";

@@ -35,14 +35,14 @@ $hash = md5($urlDecoded);
 
 if(!file_exists("{$audioOutput}/{$hash}.mp3")) {
 	// Generate the audio
-	$command = $dectalkPath . " -w " . escapeshellarg("{$audioOutput}/{$hash}.wav") . " " . escapeshellarg($urlDecoded);
+	chdir($dectalkPath);
+	$command = "say.exe -w " . escapeshellarg("{$audioOutput}/{$hash}.wav") . " " . escapeshellarg($urlDecoded);
 	shell_exec($command);
 	// Now convert to mp3 with ffmpeg
-	$command = "ffmpeg -guess_layout_max 0 -i " . escapeshellarg("{$audioOutput}/{$hash}.wav") . " -acodec libmp3lame -ac 2 -b:a 128k " . escapeshellarg("{$audioOutput}/{$hash}.wav");
+	$command = "ffmpeg -y -guess_layout_max 0 -i " . escapeshellarg("{$audioOutput}/{$hash}.wav") . " -acodec libmp3lame -ac 2 -b:a 128k " . escapeshellarg("{$audioOutput}/{$hash}.mp3");
 	shell_exec($command);
 	// Delete the original wav file
-	$commend = "del " . escapeshellarg("{$audioOutput}/{$hash}.wav");
-	shell_exec($command);
+	unlink("{$audioOutput}/{$hash}.wav");
 }
 
 // Now all we have to do is send back the URL.
