@@ -2,7 +2,7 @@
 // This file is for configuration options for the API. Included by all other files that handle requests.
 
 // Current API Version
-$apiVersion = 1.6;
+$apiVersion = 1.7;
 
 // Key used to authenticate communications between the BYOND server and the API. Keep this secure.
 $authKey = "auth_key";
@@ -43,11 +43,14 @@ $tgsApiVersion = "Tgstation.Server.Api/9.0.1";
 // Path to the youtube-dl executable. Used for song downloads. Set to false to disable functionality.
 $youtubedlPath = "C:\\youtube-dl";
 
+// Path to the DECTalk say.exe file, used for outputting TTS audio. Set to false to disable functionality.
+$dectalkPath = "C:\\dectalk\\say.exe";
+
 // Directory to output downloaded audio to. Should be a webserver directory.
-$youtubeAudioOutput = "C:/inetpub/wwwroot-rsc/youtube-audio";
+$audioOutput = "C:/inetpub/wwwroot-rsc/youtube-audio";
 
 // Web address audio is accessible at
-$youtubeAudioWeb = "http://rsc.austation.net/youtube-audio";
+$audioWeb = "http://rsc.austation.net/youtube-audio";
 
 // Verbose logging toggle. Toggles trace logs in the log.txt file. Turn this off in production environments (as if anyone would use this for a real server LMAO, Right?)
 $verbose = true;

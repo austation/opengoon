@@ -46,26 +46,26 @@ if(session_id()) session_write_close();
 
 $id = $matches[1];
 // Be efficient; have a plan to kill everyone you meet
-if(!file_exists("{$youtubeAudioOutput}/{$id}.mp3")) {
-	$command = "python " . $youtubedlPath . " -x --audio-format mp3 -o \"{$youtubeAudioOutput}/%(id)s.%(ext)s\" " . escapeshellarg($id) . " 2>&1";
+if(!file_exists("{$audioOutput}/{$id}.mp3")) {
+	$command = "python " . $youtubedlPath . " -x --audio-format mp3 -o \"{$audioOutput}/%(id)s.%(ext)s\" " . escapeshellarg($id) . " 2>&1";
 	shell_exec($command);
 }
 
 // We do a little bit of trolling... and cache the video's json data too
-if(!file_exists("{$youtubeAudioOutput}/{$id}.json")) {
-	$command = "python " . $youtubedlPath . " -j " . escapeshellarg($id) . " 1>" . escapeshellarg("{$youtubeAudioOutput}/{$id}.json") . " 2>nul";
+if(!file_exists("{$audioOutput}/{$id}.json")) {
+	$command = "python " . $youtubedlPath . " -j " . escapeshellarg($id) . " 1>" . escapeshellarg("{$audioOutput}/{$id}.json") . " 2>nul";
 	shell_exec($command);
 }
 
 // Now retrieve the json data from file
-$data = json_decode(file_get_contents("{$youtubeAudioOutput}/{$id}.json"), true);
+$data = json_decode(file_get_contents("{$audioOutput}/{$id}.json"), true);
 
 // Grab the filesize in KiB for funnies
-$size = round(filesize("{$youtubeAudioOutput}/{$id}.mp3") / 1024);
+$size = round(filesize("{$audioOutput}/{$id}.mp3") / 1024);
 
 // Should have the file downloaded now, can do our callback
 $data = [
-	"file" => "{$youtubeAudioWeb}/{$id}.mp3",
+	"file" => "{$audioWeb}/{$id}.mp3",
 	"key" => $_GET['key'],
 	"title" => $data['title'], // Todo actually get song title
 	"filesize" => "{$size}KiB",

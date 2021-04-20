@@ -1,6 +1,14 @@
 <?php
 require 'config.php';
 
+// Run a check for Windows or Linux. This API is not compatible with Linux.
+// If you make this API compatible with linux somehow, remove this check.
+if(strpos(strtolower(PHP_OS), "win") === false) {
+	http_response_code(500);
+	echo json_error("Opengoon does not support Linux, or any non-Windows OS. Please ensure code support for Linux (goodluck), retry using a Windows OS, or use Francium's Cloverfield API as a substitute.");
+	exit;
+}
+
 const JSON_SUCCESS = "{\"status\":\"OK\"}"; // success value because I'm lazy af and don't wanna type it. We just use this to add a small body to requests with no return, so the server doesn't die.
 
 // Make a callback to a server. Takes a server address, port and associative array of arguments to pass, along with a proc and optional datum to call
