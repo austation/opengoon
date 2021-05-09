@@ -45,15 +45,16 @@ flush();
 if(session_id()) session_write_close();
 
 $id = $matches[1];
+$sanitizedUrl = "https://youtu.be/{$id}";
 // Be efficient; have a plan to kill everyone you meet
 if(!file_exists("{$audioOutput}/{$id}.mp3")) {
-	$command = "python " . $youtubedlPath . " -x --audio-format mp3 -o \"{$audioOutput}/%(id)s.%(ext)s\" " . escapeshellarg($id) . " 2>&1";
+	$command = "python " . $youtubedlPath . " -x --audio-format mp3 -o \"{$audioOutput}/%(id)s.%(ext)s\" " . escapeshellarg($sanitizedUrl) . " 2>&1";
 	shell_exec($command);
 }
 
 // We do a little bit of trolling... and cache the video's json data too
 if(!file_exists("{$audioOutput}/{$id}.json")) {
-	$command = "python " . $youtubedlPath . " -j " . escapeshellarg($id) . " 1>" . escapeshellarg("{$audioOutput}/{$id}.json") . " 2>nul";
+	$command = "python " . $youtubedlPath . " -j " . escapeshellarg($sanitizedUrl) . " 1>" . escapeshellarg("{$audioOutput}/{$id}.json") . " 2>nul";
 	shell_exec($command);
 }
 
@@ -67,9 +68,9 @@ $size = round(filesize("{$audioOutput}/{$id}.mp3") / 1024);
 $data = [
 	"file" => "{$audioWeb}/{$id}.mp3",
 	"key" => $_GET['key'],
-	"title" => $data['title'], // Todo actually get song title
+	"title" => $data['title'],
 	"filesize" => "{$size}KiB",
-	"duration" => "{$data['duration']}s" // Also todo
+	"duration" => "{$data['duration']}s"
 ];
 
 callback($servers[$_GET['server']]['ip'], $servers[$_GET['server']]['port'], $data, false, false, "youtube")
